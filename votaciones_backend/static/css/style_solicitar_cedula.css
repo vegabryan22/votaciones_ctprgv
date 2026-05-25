@@ -1,0 +1,17 @@
+.centered-form-container {
+    max-width: 400px; /* Reduce el tamaño del contenedor */
+    margin: auto; /* Centra el contenedor horizontalmente */
+    margin-top: 50px; /* Espacio desde el top del viewport */
+    border: 1px solid #ccc; /* Borde sutil */
+    padding: 20px; /* Padding interno */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Sombra sutil */
+    background-color: white; /* Fondo blanco para resaltar el formulario */
+}
+.form-header {
+    text-align: center; /* Centra el título */
+    margin-bottom: 20px; /* Espacio después del título */
+    font-size: 26px;
+}
+.btn-primary {
+    width: 100%; /* Extiende el botón a lo ancho del contenedor */
+}

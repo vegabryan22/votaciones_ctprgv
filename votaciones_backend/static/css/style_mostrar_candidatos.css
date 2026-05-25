@@ -1,0 +1,29 @@
+.candidate-photo {
+    height: 150px; /* Altura fija para las fotos */
+    width: 150px; /* Ancho fijo para mantener la proporción */
+    margin-bottom: 10px; /* Espacio debajo de la foto */
+}
+.candidate-item {
+    text-align: center; /* Centra el texto y la imagen en la celda */
+    margin-top: 10px; /* Espacio encima de cada celda */
+}
+.candidate-item input[type="radio"] {
+    display: none; /* Oculta el input radio */
+}
+.candidate-item label {
+    cursor: pointer; /* Indica que el label es clickeable */
+    padding: 10px;
+    border: 2px solid transparent; /* Borde transparente por defecto */
+}
+.candidate-item input[type="radio"]:checked + label {
+    border-color: #007bff; /* Borde azul cuando está seleccionado */
+    background-color: #e7f1ff; /* Fondo azul claro cuando está seleccionado */
+}
+.vote-button-container {
+    text-align: center; /* Centra el botón en el contenedor */
+    margin-top: 20px; /* Espacio antes del botón */
+}
+.btn-vote {
+    padding: 10px 20px; /* Aumenta el padding para un botón más grande */
+    font-size: 20px; /* Tamaño de fuente más grande para el texto del botón */
+}

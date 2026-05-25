@@ -1,0 +1,23 @@
+﻿# Entorno local
+votaciones_backend/.venv/
+votaciones_backend/venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Logs y temporales
+*.log
+votaciones_backend/_run.out.log
+votaciones_backend/_run.err.log
+
+# IDE/OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Backups locales
+*.bak

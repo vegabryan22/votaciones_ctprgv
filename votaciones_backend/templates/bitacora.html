@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Bitacora del sistema</h2>
+    <div class="card p-3">
+        <form method="get" class="row g-2 mb-3">
+            <div class="col-md-2">
+                <label class="form-label mb-1">Actor</label>
+                <input type="text" name="actor" value="{{ filtros.actor }}" class="form-control" placeholder="admin:1">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label mb-1">Accion</label>
+                <select name="accion" class="form-select">
+                    <option value="">Todas</option>
+                    {% for a in acciones %}
+                    <option value="{{ a.accion }}" {{ 'selected' if filtros.accion == a.accion else '' }}>
+                        {{ a.accion }} ({{ a.total }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label mb-1">IP</label>
+                <input type="text" name="ip" value="{{ filtros.ip }}" class="form-control" placeholder="192.168.1.10">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label mb-1">Desde</label>
+                <input type="date" name="desde" value="{{ filtros.desde }}" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label mb-1">Hasta</label>
+                <input type="date" name="hasta" value="{{ filtros.hasta }}" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label mb-1">Registros</label>
+                <select name="limit" class="form-select">
+                    {% for l in [100, 250, 500, 1000, 2000] %}
+                    <option value="{{ l }}" {{ 'selected' if filtros.limit == l else '' }}>{{ l }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-8">
+                <label class="form-label mb-1">Buscar texto</label>
+                <input type="text" name="q" value="{{ filtros.q }}" class="form-control" placeholder="detalle, actor, accion o IP">
+            </div>
+            <div class="col-md-4 d-flex align-items-end justify-content-end gap-2">
+                <button class="btn btn-primary" type="submit">Filtrar</button>
+                <a class="btn btn-outline-secondary" href="{{ url_for('bitacora_sistema') }}">Limpiar filtros</a>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+                <thead><tr><th>Fecha</th><th>Actor</th><th>Accion</th><th>Detalle</th><th>IP</th></tr></thead>
+                <tbody>
+                {% for e in eventos %}
+                <tr>
+                    <td>{{ e.created_at }}</td>
+                    <td>{{ e.actor }}</td>
+                    <td>{{ e.accion }}</td>
+                    <td>{{ e.detalle or '-' }}</td>
+                    <td>{{ e.ip_origen or '-' }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-muted">Sin resultados para los filtros seleccionados.</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+.container-datos-estudiante {
+    max-width: 600px; /* Más pequeño y centrado */
+    font-size: 24px;
+}
+.highlight {
+    text-transform: uppercase; /* Texto en mayúsculas */
+    font-weight: bold; /* Texto en negrita */
+    color: #28527a; /* Color oscuro para destacar */
+}
+.text-center {
+    text-align: center; /* Centrar texto */
+}
+.btn-custom {
+    margin-top: 10px; /* Espacio adicional arriba del botón */
+    background-color: #11b311; /* Personaliza el color del botón */
+    border-color: #000000; /* Borde para el botón de volver */
+
+    color: white; /* Texto del botón en blanco */
+}
+.btn-red {
+    margin-top: 10px; /* Espacio adicional arriba del botón */
+    background-color: #e91f11; /* Fondo claro para el botón de volver */
+    border-color: #000000; /* Borde para el botón de volver */
+    color: #ffffff; /* Color de texto para el botón de volver */
+}

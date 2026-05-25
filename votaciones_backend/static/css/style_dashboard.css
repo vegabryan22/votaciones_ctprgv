@@ -1,0 +1,31 @@
+.chart-container {
+    width: 100%;
+    height: auto;
+}
+.chart-canvas {
+    width: 50%; /* Full width for smaller devices, adjust as needed */
+    float: left;
+    padding: 15px;
+}
+.party-image {
+    width: 80px;  /* Adjusted size */
+    height: auto;
+    display: block;
+    margin-top: 10px;
+}
+.content-section {
+    display: flex;
+    justify-content: space-between; /* Align elements side by side */
+    align-items: center; /* Align vertically */
+}
+.stats-container {
+    width: 50%; /* Matching width with chart canvas */
+}
+.text-large {
+    font-size: 1.2em; /* Larger text for readability */
+}
+.party-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Cuadrícula 3x3 */
+    gap: 15px; /* Espacio entre elementos de la cuadrícula */
+}
