@@ -210,7 +210,7 @@ def login():
             login_user(User(user['id'], user['username'], user.get('role', 'admin')))
             session['user_role'] = user.get('role', 'admin')
             session['user_name'] = user.get('username')
-            flash('Inicio de sesiÃ³n exitoso', 'success')
+            flash('Inicio de sesión exitoso', 'success')
             return redirect(url_for('mantenimiento'))
         else:
             flash('Credenciales incorrectas', 'error')
@@ -223,7 +223,7 @@ def logout():
     logout_user()
     session.pop('user_role', None)
     session.pop('user_name', None)
-    flash('SesiÃ³n cerrada exitosamente', 'success')
+    flash('Sesión cerrada exitosamente', 'success')
     return redirect(url_for('login'))
 
 @app.route('/votaciones/register', methods=['GET', 'POST'])
@@ -234,7 +234,7 @@ def register():
         confirm_password = request.form['confirm_password']
 
         if password != confirm_password:
-            flash('Las contraseÃ±as no coinciden', 'error')
+            flash('Las contraseñas no coinciden', 'error')
             return redirect('/votaciones/register')
 
         success, message = db.register_user(username, password)
@@ -278,7 +278,7 @@ def votar():
         estudiante = db.obtener_estudiante_por_cedula(cedula_normalizada)
         if estudiante:
             if db.ya_voto(estudiante['id']):
-                flash('Ya has votado. No puedes votar mÃ¡s de una vez.', 'error')
+                flash('Ya has votado. No puedes votar más de una vez.', 'error')
                 return redirect(url_for('votar'))
             session['estudiante_id'] = estudiante['id']
             return render_template('confirmar_estudiante.html', estudiante=estudiante)
@@ -354,7 +354,7 @@ def candidatos():
         else:
             db.registrar_candidato(nombre, filename)
 
-        flash('OperaciÃ³n completada correctamente', 'success')
+        flash('Operación completada correctamente', 'success')
         return redirect(url_for('candidatos'))
     else:
         candidatos = db.obtener_candidatos()
@@ -410,7 +410,7 @@ def procesar_voto():
         db.registrar_voto(estudiante_id, candidato_id)
         return redirect(url_for('gracias'))
     else:
-        flash("Error en la votaciÃ³n o ya has votado.", 'error')
+        flash("Error en la votación o ya has votado.", 'error')
         return redirect(url_for('votar'))
 
 
@@ -430,7 +430,7 @@ def estudiantes():
         else:
             db.agregar_estudiante(nombre, apellido1, apellido2, nivel, cedula)
 
-        flash('OperaciÃ³n completada correctamente', 'success')
+        flash('Operación completada correctamente', 'success')
         return redirect(url_for('estudiantes'))
     
     estudiantes = db.obtener_todos_los_estudiantes()
@@ -532,7 +532,7 @@ def viewer_login():
         if user:
             session['viewer_auth'] = True
             session['viewer_user'] = user['username']
-            db.registrar_evento_critico(f"{user['username']} (viewer)", 'login_viewer', 'Inicio sesion visor dashboard', _client_ip())
+            db.registrar_evento_critico(f"{user['username']} (viewer)", 'login_viewer', 'Inicio sesión visor dashboard', _client_ip())
             return redirect(url_for('viewer_dashboard'))
         flash('Credenciales invalidas', 'error')
     return render_template('viewer_login.html')
@@ -544,12 +544,12 @@ def viewer_logout():
         db.registrar_evento_critico(
             f"{session.get('viewer_user', 'unknown')} (viewer)",
             'logout_viewer',
-            'Cierre sesion visor dashboard',
+            'Cierre sesión visor dashboard',
             _client_ip()
         )
     session.pop('viewer_auth', None)
     session.pop('viewer_user', None)
-    flash('Sesion cerrada.', 'success')
+    flash('Sesión cerrada.', 'success')
     return redirect(url_for('viewer_login'))
 
 
@@ -731,7 +731,7 @@ def terminal_admin_login():
         if user:
             session['terminal_admin_auth'] = True
             session['terminal_admin_user'] = user['username']
-            db.registrar_evento_critico(f"{user['username']} (terminal_admin)", 'login_terminal_admin', 'Inicio de sesion de terminal admin', _client_ip())
+            db.registrar_evento_critico(f"{user['username']} (terminal_admin)", 'login_terminal_admin', 'Inicio de sesión de terminal admin', _client_ip())
             return redirect(url_for('terminal_admin_panel'))
         flash('Credenciales invalidas', 'error')
     return render_template('terminal_admin_login.html')
@@ -743,8 +743,8 @@ def terminal_admin_logout():
     actor = f"{session.get('terminal_admin_user', 'unknown')} (terminal_admin)"
     session.pop('terminal_admin_auth', None)
     session.pop('terminal_admin_user', None)
-    db.registrar_evento_critico(actor, 'logout_terminal_admin', 'Cierre de sesion de terminal admin', _client_ip())
-    flash('Sesion cerrada.', 'success')
+    db.registrar_evento_critico(actor, 'logout_terminal_admin', 'Cierre de sesión de terminal admin', _client_ip())
+    flash('Sesión cerrada.', 'success')
     return redirect(url_for('terminal_admin_login'))
 
 
@@ -921,4 +921,5 @@ def bitacora_sistema():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+
 

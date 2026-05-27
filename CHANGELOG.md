@@ -43,3 +43,8 @@ Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 - Plantillas HTML iniciales y recursos estaticos.
 
 > Nota: las versiones anteriores a 1.0.0 son reconstruccion historica basada en artefactos de codigo/fechas de archivos y pueden no coincidir 1:1 con el historial original del servidor.
+## [1.0.1] - 2026-05-27
+### Fixed
+- Corrección de textos con caracteres dañados (acentos) en mensajes y formularios.
+- Eliminación de mensaje flash duplicado en login administrativo (`/votaciones/login`).
+- Homologación de etiquetas de "Contraseña" y "Sesión" en vistas administrativas.

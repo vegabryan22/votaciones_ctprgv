@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+﻿{% extends "layout.html" %}
 {% block content %}
 <div class="container mt-4">
     <h2>Usuarios del sistema</h2>
@@ -14,7 +14,7 @@
         <h5>Crear usuario</h5>
         <form method="post" action="{{ url_for('usuarios') }}" class="row g-2">
             <div class="col-md-3"><input class="form-control" name="username" placeholder="Usuario" required></div>
-            <div class="col-md-3"><input class="form-control" type="password" name="password" placeholder="Contrasena" required></div>
+            <div class="col-md-3"><input class="form-control" type="password" name="password" placeholder="Contraseña" required></div>
             <div class="col-md-3">
                 <select class="form-select" name="role">
                     <option value="admin">admin</option>
@@ -69,3 +69,4 @@
     </div>
 </div>
 {% endblock %}
+
