@@ -1,0 +1,92 @@
+﻿-- ============================================================
+-- Votaciones CTPRGV - Esquema oficial de base de datos
+-- Version: 1.0.0
+-- ============================================================
+
+CREATE DATABASE IF NOT EXISTS votaciones CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE votaciones;
+
+CREATE TABLE IF NOT EXISTS candidatos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(150) NOT NULL,
+  imagen VARCHAR(255) NULL,
+  activo TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS estudiantes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(120) NOT NULL,
+  apellido1 VARCHAR(120) NOT NULL,
+  apellido2 VARCHAR(120) NOT NULL,
+  cedula VARCHAR(60) NOT NULL,
+  nivel VARCHAR(60) NOT NULL,
+  ha_votado TINYINT(1) NOT NULL DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_estudiantes_cedula (cedula)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS votos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  estudiante_id INT NOT NULL,
+  candidato_id INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_votos_estudiante (estudiante_id),
+  KEY idx_votos_candidato (candidato_id),
+  CONSTRAINT fk_votos_estudiante FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id) ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT fk_votos_candidato FOREIGN KEY (candidato_id) REFERENCES candidatos(id) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(120) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS system_users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(120) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  role VARCHAR(40) NOT NULL DEFAULT 'admin',
+  active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS voting_settings (
+  id TINYINT NOT NULL PRIMARY KEY,
+  voting_closed TINYINT(1) NOT NULL DEFAULT 0,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO voting_settings (id, voting_closed)
+SELECT 1, 0
+WHERE NOT EXISTS (SELECT 1 FROM voting_settings WHERE id = 1);
+
+CREATE TABLE IF NOT EXISTS terminales_votacion (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  codigo VARCHAR(64) NOT NULL UNIQUE,
+  nombre VARCHAR(120) NOT NULL,
+  ubicacion VARCHAR(120) NULL,
+  token VARCHAR(128) NOT NULL,
+  activa TINYINT(1) NOT NULL DEFAULT 1,
+  last_seen DATETIME NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS bitacora_critica (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  actor VARCHAR(120) NOT NULL,
+  accion VARCHAR(120) NOT NULL,
+  detalle TEXT NULL,
+  ip_origen VARCHAR(64) NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_bitacora_created_at (created_at),
+  INDEX idx_bitacora_actor (actor),
+  INDEX idx_bitacora_accion (accion),
+  INDEX idx_bitacora_ip (ip_origen)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
