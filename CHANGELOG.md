@@ -2,6 +2,11 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.16] - 2026-05-28
+### Changed
+- Autoregistro de terminal ahora completa la autorización en el mismo flujo y redirige directo a votar.
+- Se elimina el paso intermedio de confirmación manual en login para terminal recién autoregistrada.
+
 ## [1.0.15] - 2026-05-28
 ### Changed
 - Módulo de terminales: eliminación masiva simplificada a botón superior con confirmación visual.

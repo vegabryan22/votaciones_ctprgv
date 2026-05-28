@@ -757,7 +757,8 @@ def terminal_login():
         flash(f"Terminal autorizada: {terminal['nombre']}", 'success')
         next_url = request.args.get('next') or url_for('votar')
         return redirect(next_url)
-    return render_template('terminal_login.html')
+    prefill = session.pop('terminal_prefill', None)
+    return render_template('terminal_login.html', prefill=prefill or {})
 
 
 @app.route('/votaciones/terminal/autoregistro', methods=['GET', 'POST'])
@@ -788,8 +789,8 @@ def terminal_autoregistro():
             f"codigo={codigo}, action={result['action']}",
             _client_ip()
         )
-        flash(f"Terminal activa. Token generado: {result['token']}", 'success')
-        return redirect(url_for('terminal_login'))
+        flash('Terminal autoregistrada y autorizada correctamente.', 'success')
+        return redirect(url_for('votar'))
     return render_template('terminal_autoregistro.html')
 
 
