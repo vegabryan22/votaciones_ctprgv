@@ -32,37 +32,39 @@
             margin-bottom: 10px;
             min-height: 2.1rem;
         }
-        .vote-preview-label {
-            font-size: .78rem;
-            color: #5f7287;
-            text-transform: uppercase;
-            letter-spacing: .2px;
-            margin: 4px 0 6px;
-            font-weight: 700;
-        }
-        .vote-preview {
+        .student-demo {
             border: 1px solid #d9e3ef;
-            border-radius: 10px;
-            padding: 8px;
+            border-radius: 12px;
             background: #f8fbff;
-            margin-bottom: 10px;
+            padding: 12px;
+            margin-bottom: 14px;
         }
-        .vote-preview-thumb {
+        .student-demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        .student-demo-card {
+            border: 2px solid #e7edf5;
+            border-radius: 12px;
+            background: #fff;
+            padding: 8px;
+            text-align: center;
+        }
+        .student-demo-card img {
             width: 100%;
             aspect-ratio: 16 / 9;
             object-fit: contain;
             object-position: center;
-            background: #ffffff;
             border-radius: 8px;
+            background: #f8fafc;
             border: 1px solid #e7edf5;
             padding: 6px;
         }
-        .vote-preview-name {
-            margin-top: 8px;
-            margin-bottom: 0;
-            font-size: .92rem;
-            font-weight: 600;
-            text-align: center;
+        .student-demo-card h6 {
+            margin: 8px 0 0;
+            font-size: .95rem;
+            font-weight: 700;
             color: #0f3d66;
         }
     </style>
@@ -87,17 +89,23 @@
 
     <div class="card p-3">
         <h5 class="mb-3">Candidatos existentes</h5>
+        <div class="student-demo">
+            <h6 class="mb-2">Demo de vista del estudiante para votar</h6>
+            <div class="student-demo-grid">
+                {% for candidato in candidatos %}
+                <div class="student-demo-card">
+                    <img src="{{ url_for('static', filename='uploads/' + candidato['imagen']) }}" alt="Demo {{ candidato['nombre'] }}">
+                    <h6>{{ candidato['nombre'] }}</h6>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
         <div class="candidate-grid">
             {% for candidato in candidatos %}
             <div class="candidate-item">
                 <img class="candidate-thumb" src="{{ url_for('static', filename='uploads/' + candidato['imagen']) }}" alt="{{ candidato['nombre'] }}">
                 <div class="candidate-body">
                     <div class="candidate-name">{{ candidato['nombre'] }}</div>
-                    <div class="vote-preview-label">Vista previa terminal</div>
-                    <div class="vote-preview">
-                        <img class="vote-preview-thumb" src="{{ url_for('static', filename='uploads/' + candidato['imagen']) }}" alt="Vista previa {{ candidato['nombre'] }}">
-                        <p class="vote-preview-name">{{ candidato['nombre'] }}</p>
-                    </div>
                     <div class="d-flex gap-2">
                         <button type="button" class="btn btn-info btn-sm actualizar-btn" data-id="{{ candidato['id'] }}" data-nombre="{{ candidato['nombre'] }}">Editar</button>
                         <form action="{{ url_for('eliminar_candidato', id=candidato['id']) }}" method="post" onsubmit="return confirm('Deseas eliminar este candidato?');">

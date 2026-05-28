@@ -2,6 +2,11 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.10] - 2026-05-28
+### Changed
+- Reemplazo de vista previa repetida por candidato en mantenimiento por una demo unificada de la vista del estudiante para votar.
+- Ajuste de presentación de demo de partidos para validar visualmente cómo se muestran en terminal.
+
 ## [1.0.9] - 2026-05-28
 ### Added
 - Manual de uso completo en formato HTML accesible desde la aplicación (`/votaciones/manual`).
