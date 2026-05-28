@@ -2,6 +2,10 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.23] - 2026-05-28
+### Changed
+- Dashboard móvil: tarjetas de partidos en estadísticas ahora se muestran en 2 columnas por fila.
+
 ## [1.0.22] - 2026-05-28
 ### Fixed
 - Dashboard: se evita repintar/recrear gráficas cuando no hay cambios de datos para eliminar recarga visual innecesaria.
