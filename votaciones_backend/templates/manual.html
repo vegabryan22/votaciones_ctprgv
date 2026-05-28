@@ -1,0 +1,119 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-2">
+    <div class="card p-4 mb-3">
+        <h1 class="mb-2">Manual de uso del sistema de votaciones</h1>
+        <p class="text-muted mb-0">Guía operativa para administración, terminales, padrón, reportes y mantenimiento.</p>
+    </div>
+
+    <div class="card p-4 mb-3">
+        <h3>1. Acceso y roles</h3>
+        <p><strong>Administrador:</strong> acceso total a dashboard, candidatos, estudiantes, carga, sitio, usuarios y bitácora.</p>
+        <p><strong>Viewer:</strong> solo consulta de dashboard y descarga de corte (sin acta final ni administración).</p>
+        <p><strong>Terminal admin:</strong> autoriza/gestiona terminales de votación.</p>
+    </div>
+
+    <div class="card p-4 mb-3">
+        <h3>2. Flujo recomendado de operación</h3>
+        <ol class="mb-0">
+            <li>Registrar/validar candidatos (incluyendo “Voto en Blanco”).</li>
+            <li>Cargar padrón de estudiantes.</li>
+            <li>Activar y validar terminales.</li>
+            <li>Verificar semáforo de apertura en Dashboard.</li>
+            <li>Abrir votación.</li>
+            <li>Monitorear participación y bitácora.</li>
+            <li>Cerrar votación.</li>
+            <li>Descargar corte/acta final.</li>
+        </ol>
+    </div>
+
+    <div class="card p-4 mb-3">
+        <h3>3. Dashboard de votaciones</h3>
+        <ul class="mb-0">
+            <li><strong>Semáforo:</strong> indica si se puede abrir la votación.</li>
+            <li><strong>Reglas de apertura:</strong> candidatos activos, “Voto en Blanco”, terminales activas mínimas, padrón mínimo.</li>
+            <li><strong>Botón abrir/cerrar:</strong> controla el estado global de la elección.</li>
+            <li><strong>Resumen rápido:</strong> participantes, abstencionistas, padrón y terminales activas.</li>
+            <li><strong>Gráficas:</strong> muestran resultados y participación; si no hay datos se muestra aviso.</li>
+        </ul>
+    </div>
+
+    <div class="card p-4 mb-3">
+        <h3>4. Candidatos</h3>
+        <ul class="mb-0">
+            <li>Crear, editar, activar/desactivar candidatos.</li>
+            <li>Cargar imagen/logo del partido.</li>
+            <li>No eliminar candidatos con votos asociados.</li>
+            <li>Requisito operativo: al menos 3 activos y uno debe ser “Voto en Blanco”.</li>
+        </ul>
+    </div>
+
+    <div class="card p-4 mb-3">
+        <h3>5. Estudiantes y padrón</h3>
+        <ul>
+            <li>Módulo <strong>Estudiantes</strong>: edición manual de registros.</li>
+            <li>Módulo <strong>Cargar estudiantes</strong>: importar CSV/XLSX por plantilla.</li>
+            <li>La carga omite filas incompletas y actualiza por cédula si existe.</li>
+            <li>Validar al finalizar: total de registros y errores reportados.</li>
+        </ul>
+        <p class="mb-0"><strong>Plantillas:</strong> disponibles desde el mismo módulo de carga.</p>
+    </div>
+
+    <div class="card p-4 mb-3">
+        <h3>6. Terminales y mantenimiento de sitio</h3>
+        <ul class="mb-0">
+            <li>Crear terminal con código, nombre y ubicación.</li>
+            <li>Activar/desactivar terminales.</li>
+            <li>Rotar token de seguridad cuando sea necesario.</li>
+            <li>Configurar mínimo de terminales activas para apertura de votación.</li>
+            <li>Eliminar terminales fuera de uso.</li>
+        </ul>
+    </div>
+
+    <div class="card p-4 mb-3">
+        <h3>7. Proceso de votación en terminal</h3>
+        <ol class="mb-0">
+            <li>Autorizar terminal por código y token (o autoregistro autorizado).</li>
+            <li>Ingresar cédula del estudiante.</li>
+            <li>Confirmar identidad.</li>
+            <li>Seleccionar candidato y emitir voto.</li>
+            <li>Mostrar confirmación final.</li>
+        </ol>
+    </div>
+
+    <div class="card p-4 mb-3">
+        <h3>8. Bitácora del sistema</h3>
+        <ul class="mb-0">
+            <li>Registra acciones críticas y eventos HTTP de negocio.</li>
+            <li>Incluye actor, acción, detalle, fecha e IP.</li>
+            <li>Usar para auditoría y trazabilidad operativa.</li>
+        </ul>
+    </div>
+
+    <div class="card p-4 mb-3">
+        <h3>9. Reportes</h3>
+        <ul class="mb-0">
+            <li><strong>Corte:</strong> estado parcial de participación.</li>
+            <li><strong>Acta final:</strong> disponible al cerrar votación.</li>
+            <li>Recomendado descargar y respaldar inmediatamente tras cierre.</li>
+        </ul>
+    </div>
+
+    <div class="card p-4 mb-3">
+        <h3>10. Mantenimiento anual</h3>
+        <p>Desde <strong>Mantenimiento sitio</strong>, opción de limpieza anual de padrón/votos con confirmación explícita.</p>
+        <p class="mb-0 text-danger"><strong>Advertencia:</strong> ejecutar solo al cierre oficial del periodo electoral.</p>
+    </div>
+
+    <div class="card p-4 mb-3">
+        <h3>11. Solución de problemas comunes</h3>
+        <ul class="mb-0">
+            <li><strong>No abre votación:</strong> revisar semáforo y criterios pendientes.</li>
+            <li><strong>Terminal no autorizada:</strong> validar código/token y estado activa.</li>
+            <li><strong>Errores de importación:</strong> validar columnas de plantilla y tipos de archivo.</li>
+            <li><strong>Gráficas vacías:</strong> normal si aún no hay votos/participación.</li>
+            <li><strong>Acceso denegado:</strong> verificar rol del usuario.</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

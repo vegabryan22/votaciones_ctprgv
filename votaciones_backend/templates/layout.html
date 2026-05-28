@@ -192,6 +192,11 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint == 'manual_uso' else '' }}" href="{{ url_for('manual_uso') }}">
+                    <i class="fas fa-book-open"></i> Manual de uso
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('logout') }}">
                     <i class="fas fa-sign-out-alt"></i> Salir
                 </a>

@@ -580,6 +580,12 @@ def mantenimiento():
     )
 
 
+@app.route('/votaciones/manual')
+@admin_required
+def manual_uso():
+    return render_template('manual.html')
+
+
 @app.route('/votaciones/visor/login', methods=['GET', 'POST'])
 def viewer_login():
     if request.method == 'POST':

@@ -2,6 +2,16 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.9] - 2026-05-28
+### Added
+- Manual de uso completo en formato HTML accesible desde la aplicación (`/votaciones/manual`).
+- Enlace directo a manual en el menú de mantenimiento.
+- Vista previa de candidato "como se verá en terminal" en mantenimiento de candidatos.
+
+### Changed
+- Ajuste de visualización de imágenes de partidos para verse completas (sin recorte agresivo) en mantenimiento y vista de votación.
+- Tarjetas de imagen de candidato en votación con proporción estable para consistencia visual.
+
 ## [1.0.8] - 2026-05-28
 ### Changed
 - Reorganizacion del dashboard para reducir huecos y mejorar simetria entre contenedores.
