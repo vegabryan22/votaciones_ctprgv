@@ -2,6 +2,11 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.11] - 2026-05-28
+### Changed
+- Demo de vista de votación de estudiante movida a modal en mantenimiento de candidatos.
+- Limpieza de la pantalla principal de candidatos para reducir saturación visual.
+
 ## [1.0.10] - 2026-05-28
 ### Changed
 - Reemplazo de vista previa repetida por candidato en mantenimiento por una demo unificada de la vista del estudiante para votar.

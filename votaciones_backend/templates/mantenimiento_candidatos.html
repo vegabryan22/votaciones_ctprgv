@@ -88,17 +88,11 @@
     </div>
 
     <div class="card p-3">
-        <h5 class="mb-3">Candidatos existentes</h5>
-        <div class="student-demo">
-            <h6 class="mb-2">Demo de vista del estudiante para votar</h6>
-            <div class="student-demo-grid">
-                {% for candidato in candidatos %}
-                <div class="student-demo-card">
-                    <img src="{{ url_for('static', filename='uploads/' + candidato['imagen']) }}" alt="Demo {{ candidato['nombre'] }}">
-                    <h6>{{ candidato['nombre'] }}</h6>
-                </div>
-                {% endfor %}
-            </div>
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <h5 class="mb-0">Candidatos existentes</h5>
+            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#studentDemoModal">
+                Ver demo de votación
+            </button>
         </div>
         <div class="candidate-grid">
             {% for candidato in candidatos %}
@@ -115,6 +109,29 @@
                 </div>
             </div>
             {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="studentDemoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Demo de vista del estudiante para votar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="student-demo">
+                    <div class="student-demo-grid">
+                        {% for candidato in candidatos %}
+                        <div class="student-demo-card">
+                            <img src="{{ url_for('static', filename='uploads/' + candidato['imagen']) }}" alt="Demo {{ candidato['nombre'] }}">
+                            <h6>{{ candidato['nombre'] }}</h6>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
