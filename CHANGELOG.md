@@ -2,6 +2,12 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.12] - 2026-05-28
+### Fixed
+- Corrección de condición de carrera en registro de voto entre terminales concurrentes.
+- Confirmación "Gracias por votar" solo cuando el voto se guarda realmente en base de datos.
+- Manejo explícito de duplicado por estudiante (error 1062) para mostrar mensaje de "ya votó".
+
 ## [1.0.11] - 2026-05-28
 ### Changed
 - Demo de vista de votación de estudiante movida a modal en mantenimiento de candidatos.

@@ -453,12 +453,16 @@ def procesar_voto():
         return redirect(url_for('votar'))
     candidato_id = request.form.get('candidato_id')
     estudiante_id = session.pop('estudiante_id', None)
-    if estudiante_id and not db.ya_voto(estudiante_id):
-        db.registrar_voto(estudiante_id, candidato_id)
-        return redirect(url_for('gracias'))
-    else:
-        flash("Error en la votación o ya has votado.", 'error')
+    if not estudiante_id:
+        flash("No se encontró una sesión de voto válida.", 'error')
         return redirect(url_for('votar'))
+
+    ok, msg = db.registrar_voto(estudiante_id, candidato_id)
+    if ok:
+        return redirect(url_for('gracias'))
+
+    flash(msg or "Error en la votación.", 'error')
+    return redirect(url_for('votar'))
 
 
 @app.route('/votaciones/estudiantes', methods=['GET', 'POST'])

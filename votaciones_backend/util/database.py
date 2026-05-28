@@ -1,4 +1,4 @@
-import mysql.connector
+﻿import mysql.connector
 import pandas as pd
 import re
 import secrets
@@ -76,17 +76,15 @@ class DBConnection:
 
 def registrar_voto(estudiante_id, candidato_id):
     try:
-        if ya_voto(estudiante_id):
-            return "Este estudiante ya ha votado."
-        
         with DBConnection() as cursor:
             cursor.execute("INSERT INTO votos (estudiante_id, candidato_id) VALUES (%s, %s)", (estudiante_id, candidato_id))
             cursor.execute("UPDATE estudiantes SET ha_votado = 1 WHERE id = %s", (estudiante_id,))
-        
-        return "Voto registrado exitosamente."
+
+        return True, "Voto registrado exitosamente."
     except mysql.connector.Error as err:
-        # Maneja los errores específicos de la base de datos aquí
-        return str(err)
+        if getattr(err, "errno", None) == 1062:
+            return False, "Este estudiante ya ha votado."
+        return False, str(err)
 
 def obtener_candidatos():
     with DBConnection() as cursor:
@@ -116,7 +114,7 @@ def ya_voto(estudiante_id):
             result = cursor.fetchone()
             return bool(result['votado']) if result else False
     except mysql.connector.Error as err:
-        # Maneja los errores específicos de la base de datos aquí
+        # Maneja los errores especÃ­ficos de la base de datos aquÃ­
         return str(err)
 
 def registrar_candidato(nombre, imagen_path=None):
@@ -127,7 +125,7 @@ def registrar_candidato(nombre, imagen_path=None):
         with DBConnection() as cursor:
             cursor.execute("INSERT INTO candidatos (nombre, imagen) VALUES (%s, %s)", (nombre, imagen_path))
     except mysql.connector.Error as err:
-        # Maneja los errores específicos de la base de datos aquí
+        # Maneja los errores especÃ­ficos de la base de datos aquÃ­
         return str(err)
 
 def obtener_candidato_por_id(id):
@@ -285,7 +283,7 @@ def get_participation_by_level():
 
 def obtener_datos_dashboard():
     with DBConnection() as cursor:
-        # Votos por candidato y sus imágenes con porcentajes
+        # Votos por candidato y sus imÃ¡genes con porcentajes
         cursor.execute("""
         SELECT candidatos.nombre, candidatos.imagen, COUNT(votos.id) AS votos,
                ROUND((COUNT(votos.id) * 100.0 / (SELECT COUNT(*) FROM votos)), 2) AS porcentaje
@@ -295,7 +293,7 @@ def obtener_datos_dashboard():
         """)
         votos_por_candidato = cursor.fetchall()
 
-        # Participación y abstención
+        # ParticipaciÃ³n y abstenciÃ³n
         cursor.execute("""
         SELECT
             (SELECT COUNT(*) FROM estudiantes WHERE ha_votado = 1) AS participantes,
@@ -813,3 +811,4 @@ def obtener_acciones_bitacora():
             ORDER BY accion
         """)
         return cursor.fetchall()
+
