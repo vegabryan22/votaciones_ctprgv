@@ -15,42 +15,44 @@
     <div class="alert alert-info">Modo visor: solo consulta de dashboard y corte sin datos de candidatos.</div>
     {% endif %}
 
-    <div class="card p-4 mb-3">
-        <h4 class="mb-2">Control de Eleccion</h4>
+    <div class="card election-control mb-3">
         {% set ok_count = (1 if readiness.checks.candidates_min else 0) + (1 if readiness.checks.blank_candidate else 0) + (1 if readiness.checks.terminals_min else 0) + (1 if readiness.checks.students_min else 0) %}
-        {% if readiness.ready %}
-        <div class="alert alert-success py-2 mb-3"><strong>Semáforo:</strong> VERDE · Listo para abrir votación.</div>
-        {% elif ok_count >= 3 %}
-        <div class="alert alert-warning py-2 mb-3"><strong>Semáforo:</strong> AMARILLO · Casi listo, falta validar un criterio.</div>
-        {% else %}
-        <div class="alert alert-danger py-2 mb-3"><strong>Semáforo:</strong> ROJO · No listo para abrir votación.</div>
-        {% endif %}
+        <div class="election-topbar">
+            <h4 class="election-title">Control de Elección</h4>
+            {% if readiness.ready %}
+            <span class="traffic-pill ok">● Verde · Listo para abrir</span>
+            {% elif ok_count >= 3 %}
+            <span class="traffic-pill warn">● Amarillo · Falta 1 criterio</span>
+            {% else %}
+            <span class="traffic-pill bad">● Rojo · No listo para abrir</span>
+            {% endif %}
+        </div>
 
-        <div class="row g-2 mb-3">
-            <div class="col-md-3">
-                <div class="small {{ 'text-success' if readiness.checks.candidates_min else 'text-danger' }}">
+        <div class="check-grid">
+            <div class="check-chip {{ 'ok' if readiness.checks.candidates_min else 'bad' }}">
+                <div class="{{ 'text-success' if readiness.checks.candidates_min else 'text-danger' }}">
                     {{ '✓' if readiness.checks.candidates_min else '✗' }} Candidatos activos: {{ readiness.metrics.active_candidates }} (mínimo 3)
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="small {{ 'text-success' if readiness.checks.blank_candidate else 'text-danger' }}">
-                    {{ '✓' if readiness.checks.blank_candidate else '✗' }} Candidato \"Voto en Blanco\" presente
+            <div class="check-chip {{ 'ok' if readiness.checks.blank_candidate else 'bad' }}">
+                <div class="{{ 'text-success' if readiness.checks.blank_candidate else 'text-danger' }}">
+                    {{ '✓' if readiness.checks.blank_candidate else '✗' }} Candidato "Voto en Blanco" presente
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="small {{ 'text-success' if readiness.checks.terminals_min else 'text-danger' }}">
+            <div class="check-chip {{ 'ok' if readiness.checks.terminals_min else 'bad' }}">
+                <div class="{{ 'text-success' if readiness.checks.terminals_min else 'text-danger' }}">
                     {{ '✓' if readiness.checks.terminals_min else '✗' }} Terminales activas: {{ readiness.metrics.active_terminals }} (mínimo {{ readiness.metrics.min_active_terminals }})
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="small {{ 'text-success' if readiness.checks.students_min else 'text-danger' }}">
+            <div class="check-chip {{ 'ok' if readiness.checks.students_min else 'bad' }}">
+                <div class="{{ 'text-success' if readiness.checks.students_min else 'text-danger' }}">
                     {{ '✓' if readiness.checks.students_min else '✗' }} Estudiantes en padrón: {{ readiness.metrics.students_total }} (mínimo 1)
                 </div>
             </div>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-            <div>
+        <div class="control-actions">
+            <div class="status-wrap">
                 <strong>Estado de votacion:</strong>
                 {% if voting_closed %}
                 <span class="badge bg-danger">CERRADA</span>
@@ -72,7 +74,8 @@
             </div>
             {% endif %}
         </div>
-        <small class="text-muted">Mientras la votacion este abierta, los resultados por candidato permanecen ocultos.</small>
+
+        <small class="text-muted d-block mt-1">Mientras la votacion este abierta, los resultados por candidato permanecen ocultos.</small>
         {% if not is_viewer %}
         <form method="post" action="{{ url_for('actualizar_min_terminales') }}" class="row g-2 align-items-end mt-2">
             <div class="col-sm-4 col-md-3">
@@ -121,5 +124,5 @@
         </div>
     </div>
 </div>
-<script src="/votaciones_backend/static/js/dashboard.js?v=20260528b"></script>
+<script src="/votaciones_backend/static/js/dashboard.js?v=20260528c"></script>
 {% endblock %}

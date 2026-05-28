@@ -2,6 +2,12 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.4] - 2026-05-28
+### Changed
+- Rediseño compacto del panel "Control de Elección" para mejorar legibilidad y reducir altura visual.
+- Semáforo de estado en formato píldora (verde/amarillo/rojo) con jerarquía visual más clara.
+- Reglas de preparación mostradas en chips compactos en lugar de bloques extensos.
+
 ## [1.0.3] - 2026-05-28
 ### Added
 - Visualizacion de version del sistema en el pie de pagina (layouts de mantenimiento y votacion), leida desde archivo `VERSION`.

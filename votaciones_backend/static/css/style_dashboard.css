@@ -62,7 +62,97 @@
     background: #f9fcff;
 }
 
+.election-control {
+    border-radius: 16px;
+    padding: 16px !important;
+    border: 1px solid #d9e3ef;
+    box-shadow: 0 8px 18px rgba(15, 61, 102, 0.07);
+}
+
+.election-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.election-title {
+    margin: 0;
+    font-size: 1.15rem;
+}
+
+.traffic-pill {
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 6px 10px;
+    border: 1px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.traffic-pill.ok {
+    background: #e8f7ef;
+    color: #16784a;
+    border-color: #bfe8d1;
+}
+
+.traffic-pill.warn {
+    background: #fff5e0;
+    color: #8a5a00;
+    border-color: #f6dfaa;
+}
+
+.traffic-pill.bad {
+    background: #fdebec;
+    color: #a51e2d;
+    border-color: #f6c6cb;
+}
+
+.check-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+    gap: 8px;
+    margin: 8px 0 12px;
+}
+
+.check-chip {
+    border: 1px solid #d9e3ef;
+    border-radius: 10px;
+    background: #f8fbff;
+    padding: 7px 10px;
+    font-size: 0.86rem;
+}
+
+.check-chip.ok {
+    border-color: #bfe8d1;
+    background: #f1fbf5;
+}
+
+.check-chip.bad {
+    border-color: #f4c7ce;
+    background: #fff5f6;
+}
+
+.control-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.control-actions .status-wrap {
+    font-size: 0.92rem;
+}
+
 @media (max-width: 992px) {
+    .check-grid {
+        grid-template-columns: 1fr;
+    }
+
     .content-section {
         grid-template-columns: 1fr;
     }
