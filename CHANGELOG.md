@@ -2,6 +2,13 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.17] - 2026-05-28
+### Changed
+- Manual HTML actualizado y alineado al flujo actual del sistema.
+- Documentación de autoregistro directo de terminal (sin confirmación manual intermedia).
+- Sección de terminales actualizada con eliminación masiva por botón y confirmación.
+- Corrección de textos y acentos en contenido del manual.
+
 ## [1.0.16] - 2026-05-28
 ### Changed
 - Autoregistro de terminal ahora completa la autorización en el mismo flujo y redirige directo a votar.
