@@ -2,6 +2,11 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.20] - 2026-05-28
+### Fixed
+- El botón `Salir` en sesión de visor ahora usa su endpoint correcto (`/votaciones/visor/logout`).
+- Se mantiene `Salir` de admin en su endpoint actual (`/votaciones/logout`).
+
 ## [1.0.19] - 2026-05-28
 ### Changed
 - Login de `Visor` unificado al mismo `layout_front` que `Admin` y flujo de votación.
