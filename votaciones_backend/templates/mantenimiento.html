@@ -92,15 +92,26 @@
         {% endif %}
     </div>
 
-    <a href="/votaciones/descargar_corte" class="btn btn-primary px-3">Descargar Corte</a>
-    {% if not is_viewer %}
-    <a href="/votaciones/descargar_acta" class="btn btn-primary px-3">Descargar Acta Final</a>
-    {% endif %}
-    {% if is_viewer %}
-    <form method="post" action="{{ url_for('viewer_logout') }}" style="display:inline;">
-        <button type="submit" class="btn btn-outline-secondary">Salir visor</button>
-    </form>
-    {% endif %}
+    <div class="card action-bar mb-3">
+        <div class="action-bar-title">Reportes y acciones</div>
+        <div class="action-buttons">
+            <a href="/votaciones/descargar_corte" class="btn btn-outline-primary action-btn">
+                <i class="fas fa-file-download"></i> Descargar corte
+            </a>
+            {% if not is_viewer %}
+            <a href="/votaciones/descargar_acta" class="btn btn-primary action-btn">
+                <i class="fas fa-file-signature"></i> Descargar acta final
+            </a>
+            {% endif %}
+            {% if is_viewer %}
+            <form method="post" action="{{ url_for('viewer_logout') }}" class="m-0">
+                <button type="submit" class="btn btn-outline-secondary action-btn">
+                    <i class="fas fa-sign-out-alt"></i> Salir visor
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
 </div>
 <div class="container mt-3">
     <div class="content-section">

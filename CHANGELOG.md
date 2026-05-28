@@ -2,6 +2,12 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.6] - 2026-05-28
+### Changed
+- Reubicación de botones de reportes en una barra de acciones más ordenada.
+- Mejora visual de botones (ancho consistente, iconos y espaciado).
+- Ajuste responsive para mejor presentación en móvil.
+
 ## [1.0.5] - 2026-05-28
 ### Fixed
 - Corrección de caracteres UTF-8 dañados en la plantilla base de mantenimiento (`layout.html`).

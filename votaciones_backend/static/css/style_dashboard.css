@@ -148,6 +148,37 @@
     font-size: 0.92rem;
 }
 
+.action-bar {
+    border: 1px solid #d9e3ef;
+    border-radius: 14px;
+    box-shadow: 0 8px 18px rgba(15, 61, 102, 0.06);
+    padding: 12px 14px;
+}
+
+.action-bar-title {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #5f7287;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    min-width: 190px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 10px;
+}
+
 @media (max-width: 992px) {
     .check-grid {
         grid-template-columns: 1fr;
@@ -165,5 +196,9 @@
 
     .chart-canvas canvas {
         height: 220px !important;
+    }
+
+    .action-btn {
+        min-width: 100%;
     }
 }
