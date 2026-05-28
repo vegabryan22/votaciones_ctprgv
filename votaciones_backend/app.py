@@ -167,6 +167,23 @@ def _client_ip():
     return (request.remote_addr or '').strip()
 
 
+def _voting_is_closed():
+    return bool(db.get_voting_status().get("voting_closed"))
+
+
+def _require_voting_closed_for_change(action_name):
+    if not _voting_is_closed():
+        flash('No se permite modificar esta información mientras la votación está ABIERTA.', 'error')
+        db.registrar_evento_critico(
+            _actor_name(),
+            'bloqueo_operacion_por_votacion_abierta',
+            f'operacion={action_name}',
+            _client_ip()
+        )
+        return False
+    return True
+
+
 @app.before_request
 def restrict_viewer_scope():
     # Si la sesion es de visor, bloquear cualquier ruta fuera de su alcance.
@@ -272,6 +289,9 @@ def voting_stats():
 @app.route('/votaciones/votar', methods=['GET', 'POST'])
 @require_terminal_auth
 def votar():
+    if _voting_is_closed():
+        flash('La votación está cerrada. No se pueden recibir nuevos votos.', 'error')
+        return redirect(url_for('mantenimiento'))
     if request.method == 'POST':
         cedula = (request.form.get('cedula') or '').strip()
         cedula_normalizada = ''.join(ch for ch in cedula if ch.isalnum())
@@ -339,6 +359,8 @@ def descargar_corte():
 @admin_required
 def candidatos():
     if request.method == 'POST':
+        if not _require_voting_closed_for_change('candidatos'):
+            return redirect(url_for('candidatos'))
         candidato_id = request.form.get('candidato_id')
         nombre = request.form['nombre']
         imagen = request.files.get('imagen')
@@ -383,6 +405,8 @@ def actualizar_candidato(id):
 @app.route('/votaciones/eliminar_candidato/<int:id>', methods=['POST'])
 @admin_required
 def eliminar_candidato(id):
+    if not _require_voting_closed_for_change('eliminar_candidato'):
+        return redirect(url_for('candidatos'))
     success, message = db.eliminar_candidato(id)
     if not success:
         flash(message, 'error')
@@ -394,6 +418,9 @@ def eliminar_candidato(id):
 @app.route('/votaciones/mostrar_candidatos', methods=['GET'])
 @require_terminal_auth
 def mostrar_candidatos():
+    if _voting_is_closed():
+        flash('La votación está cerrada. No se pueden recibir nuevos votos.', 'error')
+        return redirect(url_for('votar'))
     if 'estudiante_id' not in session:
         return redirect(url_for('votar'))
     
@@ -404,6 +431,9 @@ def mostrar_candidatos():
 @app.route('/votaciones/procesar_voto', methods=['POST'])
 @require_terminal_auth
 def procesar_voto():
+    if _voting_is_closed():
+        flash('La votación está cerrada. No se registró el voto.', 'error')
+        return redirect(url_for('votar'))
     candidato_id = request.form.get('candidato_id')
     estudiante_id = session.pop('estudiante_id', None)
     if estudiante_id and not db.ya_voto(estudiante_id):
@@ -418,6 +448,8 @@ def procesar_voto():
 @admin_required
 def estudiantes():
     if request.method == 'POST':
+        if not _require_voting_closed_for_change('estudiantes'):
+            return redirect(url_for('estudiantes'))
         id_estudiante = request.form.get('id_estudiante')
         nombre = request.form['nombre']
         apellido1 = request.form['apellido1']
@@ -441,6 +473,8 @@ def estudiantes():
 @admin_required
 def upload_file():
     if request.method == 'POST':
+        if not _require_voting_closed_for_change('carga_padron'):
+            return redirect(url_for('upload_file'))
         if 'file' not in request.files:
             flash('No se selecciono ningun archivo', 'error')
             return redirect(request.url)
@@ -520,7 +554,13 @@ def gracias():
 @admin_required
 def mantenimiento():
     voting_status = db.get_voting_status()
-    return render_template('mantenimiento.html', voting_closed=voting_status["voting_closed"], is_viewer=False)
+    readiness = db.get_opening_readiness()
+    return render_template(
+        'mantenimiento.html',
+        voting_closed=voting_status["voting_closed"],
+        is_viewer=False,
+        readiness=readiness
+    )
 
 
 @app.route('/votaciones/visor/login', methods=['GET', 'POST'])
@@ -557,23 +597,101 @@ def viewer_logout():
 @dashboard_access_required
 def viewer_dashboard():
     voting_status = db.get_voting_status()
-    return render_template('mantenimiento.html', voting_closed=voting_status["voting_closed"], is_viewer=True)
+    readiness = db.get_opening_readiness()
+    return render_template(
+        'mantenimiento.html',
+        voting_closed=voting_status["voting_closed"],
+        is_viewer=True,
+        readiness=readiness
+    )
 
 
 @app.route('/votaciones/mantenimiento/cerrar-votacion', methods=['POST'])
 @admin_required
 def cerrar_votacion():
+    if _voting_is_closed():
+        flash('La votación ya está cerrada.', 'warning')
+        return redirect(url_for('mantenimiento'))
     db.set_voting_closed(True)
-    db.registrar_evento_critico(_actor_name(), 'cerrar_votacion', 'Se cerro la votacion', _client_ip())
+    db.registrar_evento_critico(
+        _actor_name(),
+        'cerrar_votacion',
+        f'Se cerró la votación; votos_totales={db.count_votes_total()}',
+        _client_ip()
+    )
     flash('Votacion cerrada. Ahora se pueden ver resultados finales.', 'success')
+    return redirect(url_for('mantenimiento'))
+
+
+@app.route('/votaciones/mantenimiento/min-terminales', methods=['POST'])
+@admin_required
+def actualizar_min_terminales():
+    if not _voting_is_closed():
+        flash('Solo puedes cambiar el minimo de terminales con la votacion cerrada.', 'error')
+        return redirect(url_for('mantenimiento'))
+    raw = (request.form.get('min_active_terminals') or '').strip()
+    try:
+        value = int(raw)
+    except ValueError:
+        flash('El minimo de terminales debe ser un numero entero.', 'error')
+        return redirect(url_for('mantenimiento'))
+    if value < 1:
+        flash('El minimo de terminales debe ser mayor o igual a 1.', 'error')
+        return redirect(url_for('mantenimiento'))
+    db.set_min_active_terminals(value)
+    db.registrar_evento_critico(
+        _actor_name(),
+        'config_min_terminales',
+        f'min_active_terminals={value}',
+        _client_ip()
+    )
+    flash(f'Minimo de terminales activas actualizado a {value}.', 'success')
     return redirect(url_for('mantenimiento'))
 
 
 @app.route('/votaciones/mantenimiento/abrir-votacion', methods=['POST'])
 @admin_required
 def abrir_votacion():
+    if not _voting_is_closed():
+        flash('La votación ya está abierta.', 'warning')
+        return redirect(url_for('mantenimiento'))
+
+    readiness = db.get_opening_readiness()
+    metrics = readiness["metrics"]
+    if not readiness["ready"]:
+        flash(
+            'No se puede abrir: verifica candidatos activos, padrón y terminales activas.',
+            'error'
+        )
+        db.registrar_evento_critico(
+            _actor_name(),
+            'abrir_votacion_bloqueada',
+            (
+                f"checks={readiness['checks']}; "
+                f"candidatos={metrics['active_candidates']}, "
+                f"voto_blanco={metrics['has_blank_candidate']}, "
+                f"estudiantes={metrics['students_total']}, "
+                f"terminales_activas={metrics['active_terminals']}, "
+                f"min_terminales={metrics['min_active_terminals']}"
+            ),
+            _client_ip()
+        )
+        return redirect(url_for('mantenimiento'))
+
     db.set_voting_closed(False)
-    db.registrar_evento_critico(_actor_name(), 'abrir_votacion', 'Se reabrio la votacion', _client_ip())
+    db.registrar_evento_critico(
+        _actor_name(),
+        'abrir_votacion',
+        (
+            f"Se abrió la votación; "
+            f"candidatos={metrics['active_candidates']}, "
+            f"voto_blanco={metrics['has_blank_candidate']}, "
+            f"estudiantes={metrics['students_total']}, "
+            f"terminales_activas={metrics['active_terminals']}, "
+            f"min_terminales={metrics['min_active_terminals']}"
+        ),
+        _client_ip()
+    )
     flash('Votacion reabierta. Los resultados vuelven a ocultarse.', 'success')
     return redirect(url_for('mantenimiento'))
 
@@ -653,6 +771,8 @@ def terminal_ping():
 @app.route('/votaciones/mantenimiento/terminales/crear', methods=['POST'])
 @admin_required
 def crear_terminal():
+    if not _require_voting_closed_for_change('crear_terminal'):
+        return redirect(url_for('mantenimiento_sitio'))
     codigo = (request.form.get('codigo') or '').strip()
     nombre = (request.form.get('nombre') or '').strip()
     ubicacion = (request.form.get('ubicacion') or '').strip()
@@ -672,6 +792,8 @@ def crear_terminal():
 @app.route('/votaciones/mantenimiento/terminales/actualizar/<int:terminal_id>', methods=['POST'])
 @admin_required
 def actualizar_terminal(terminal_id):
+    if not _require_voting_closed_for_change('actualizar_terminal'):
+        return redirect(url_for('mantenimiento_sitio'))
     nombre = (request.form.get('nombre') or '').strip()
     ubicacion = (request.form.get('ubicacion') or '').strip()
     activa = request.form.get('activa') == '1'
@@ -687,6 +809,8 @@ def actualizar_terminal(terminal_id):
 @app.route('/votaciones/mantenimiento/terminales/rotar-token/<int:terminal_id>', methods=['POST'])
 @admin_required
 def rotar_token_terminal(terminal_id):
+    if not _require_voting_closed_for_change('rotar_token_terminal'):
+        return redirect(url_for('mantenimiento_sitio'))
     token = db.rotar_token_terminal(terminal_id)
     db.registrar_evento_critico(_actor_name(), 'rotar_token_terminal', f'id={terminal_id}', _client_ip())
     flash(f'Nuevo token generado: {token}', 'success')
@@ -696,6 +820,8 @@ def rotar_token_terminal(terminal_id):
 @app.route('/votaciones/mantenimiento/terminales/eliminar/<int:terminal_id>', methods=['POST'])
 @admin_required
 def eliminar_terminal(terminal_id):
+    if not _require_voting_closed_for_change('eliminar_terminal'):
+        return redirect(url_for('mantenimiento_sitio'))
     db.eliminar_terminal(terminal_id)
     db.registrar_evento_critico(_actor_name(), 'eliminar_terminal', f'id={terminal_id}', _client_ip())
     flash('Terminal eliminada.', 'success')
@@ -705,6 +831,8 @@ def eliminar_terminal(terminal_id):
 @app.route('/votaciones/mantenimiento/reset-padron', methods=['POST'])
 @admin_required
 def reset_padron():
+    if not _require_voting_closed_for_change('reset_padron'):
+        return redirect(url_for('mantenimiento_sitio'))
     confirmation = (request.form.get('confirmation') or '').strip().upper()
     if confirmation != 'LIMPIAR':
         flash('Confirmacion invalida. Escribe LIMPIAR para continuar.', 'error')

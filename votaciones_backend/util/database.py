@@ -2,6 +2,7 @@ import mysql.connector
 import pandas as pd
 import re
 import secrets
+import unicodedata
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import Config
 
@@ -469,23 +470,31 @@ def ensure_voting_settings():
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS voting_settings (
                 id TINYINT NOT NULL PRIMARY KEY,
-                voting_closed TINYINT(1) NOT NULL DEFAULT 0,
+                voting_closed TINYINT(1) NOT NULL DEFAULT 1,
+                min_active_terminals INT NOT NULL DEFAULT 10,
                 updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
         """)
+        # Migracion ligera para instancias ya creadas.
+        try:
+            cursor.execute("ALTER TABLE voting_settings ADD COLUMN min_active_terminals INT NOT NULL DEFAULT 10")
+        except Exception:
+            pass
         cursor.execute("SELECT COUNT(*) AS total FROM voting_settings WHERE id = 1")
         row = cursor.fetchone()
         if row["total"] == 0:
-            cursor.execute("INSERT INTO voting_settings (id, voting_closed) VALUES (1, 0)")
+            # Estado seguro por defecto: votacion cerrada hasta validar semaforo.
+            cursor.execute("INSERT INTO voting_settings (id, voting_closed, min_active_terminals) VALUES (1, 1, 10)")
 
 
 def get_voting_status():
     ensure_voting_settings()
     with DBConnection() as cursor:
-        cursor.execute("SELECT voting_closed, updated_at FROM voting_settings WHERE id = 1")
+        cursor.execute("SELECT voting_closed, min_active_terminals, updated_at FROM voting_settings WHERE id = 1")
         row = cursor.fetchone()
         return {
             "voting_closed": bool(row["voting_closed"]) if row else False,
+            "min_active_terminals": int(row.get("min_active_terminals", 10)) if row else 10,
             "updated_at": row["updated_at"] if row else None
         }
 
@@ -497,6 +506,85 @@ def set_voting_closed(closed):
             "UPDATE voting_settings SET voting_closed = %s WHERE id = 1",
             (1 if closed else 0,)
         )
+
+
+def set_min_active_terminals(min_value):
+    ensure_voting_settings()
+    value = max(1, int(min_value))
+    with DBConnection() as cursor:
+        cursor.execute(
+            "UPDATE voting_settings SET min_active_terminals = %s WHERE id = 1",
+            (value,)
+        )
+
+
+def count_active_candidates():
+    ensure_core_tables()
+    with DBConnection() as cursor:
+        cursor.execute("SELECT COUNT(*) AS total FROM candidatos WHERE activo = 1")
+        return int(cursor.fetchone()["total"])
+
+
+def count_students_total():
+    ensure_core_tables()
+    with DBConnection() as cursor:
+        cursor.execute("SELECT COUNT(*) AS total FROM estudiantes")
+        return int(cursor.fetchone()["total"])
+
+
+def count_active_terminals():
+    ensure_terminales_table()
+    with DBConnection() as cursor:
+        cursor.execute("SELECT COUNT(*) AS total FROM terminales_votacion WHERE activa = 1")
+        return int(cursor.fetchone()["total"])
+
+
+def count_votes_total():
+    ensure_core_tables()
+    with DBConnection() as cursor:
+        cursor.execute("SELECT COUNT(*) AS total FROM votos")
+        return int(cursor.fetchone()["total"])
+
+
+def has_blank_vote_candidate():
+    ensure_core_tables()
+    with DBConnection() as cursor:
+        cursor.execute("SELECT nombre FROM candidatos WHERE activo = 1")
+        rows = cursor.fetchall()
+    for r in rows:
+        name = (r.get("nombre") or "").strip().lower()
+        name = unicodedata.normalize('NFKD', name).encode('ascii', 'ignore').decode('ascii')
+        if 'voto en blanco' in name or name == 'blanco' or 'votoblanco' in name.replace(' ', ''):
+            return True
+    return False
+
+
+def get_opening_readiness():
+    status = get_voting_status()
+    min_terminals = int(status.get("min_active_terminals", 10))
+    active_candidates = count_active_candidates()
+    students_total = count_students_total()
+    active_terminals = count_active_terminals()
+    has_blank = has_blank_vote_candidate()
+
+    checks = {
+        "candidates_min": active_candidates >= 3,
+        "blank_candidate": has_blank,
+        "terminals_min": active_terminals >= min_terminals,
+        "students_min": students_total >= 1,
+    }
+    ready = all(checks.values())
+    return {
+        "ready": ready,
+        "checks": checks,
+        "metrics": {
+            "active_candidates": active_candidates,
+            "students_total": students_total,
+            "active_terminals": active_terminals,
+            "min_active_terminals": min_terminals,
+            "has_blank_candidate": has_blank,
+        }
+    }
 
 
 def reset_padron_anual():

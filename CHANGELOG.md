@@ -2,6 +2,16 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.2] - 2026-05-28
+### Added
+- Semaforo operativo (verde/amarillo/rojo) para evaluar preparacion antes de abrir votacion.
+- Validaciones de apertura: minimo de candidatos activos, presencia obligatoria de "Voto en Blanco", minimo de terminales activas y padron con estudiantes.
+- Parametro configurable de minimo de terminales activas desde mantenimiento.
+
+### Changed
+- Estado por defecto de una eleccion nueva a votacion cerrada (modo seguro).
+- Bitacora de apertura/bloqueo de apertura con detalle de metricas y reglas evaluadas.
+
 ## [1.0.0] - 2026-05-27
 ### Added
 - Estructura de repositorio local/GitHub con versionado inicial.

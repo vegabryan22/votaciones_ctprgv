@@ -17,6 +17,38 @@
 
     <div class="card p-4 mb-3">
         <h4 class="mb-2">Control de Eleccion</h4>
+        {% set ok_count = (1 if readiness.checks.candidates_min else 0) + (1 if readiness.checks.blank_candidate else 0) + (1 if readiness.checks.terminals_min else 0) + (1 if readiness.checks.students_min else 0) %}
+        {% if readiness.ready %}
+        <div class="alert alert-success py-2 mb-3"><strong>Semáforo:</strong> VERDE · Listo para abrir votación.</div>
+        {% elif ok_count >= 3 %}
+        <div class="alert alert-warning py-2 mb-3"><strong>Semáforo:</strong> AMARILLO · Casi listo, falta validar un criterio.</div>
+        {% else %}
+        <div class="alert alert-danger py-2 mb-3"><strong>Semáforo:</strong> ROJO · No listo para abrir votación.</div>
+        {% endif %}
+
+        <div class="row g-2 mb-3">
+            <div class="col-md-3">
+                <div class="small {{ 'text-success' if readiness.checks.candidates_min else 'text-danger' }}">
+                    {{ '✓' if readiness.checks.candidates_min else '✗' }} Candidatos activos: {{ readiness.metrics.active_candidates }} (mínimo 3)
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="small {{ 'text-success' if readiness.checks.blank_candidate else 'text-danger' }}">
+                    {{ '✓' if readiness.checks.blank_candidate else '✗' }} Candidato \"Voto en Blanco\" presente
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="small {{ 'text-success' if readiness.checks.terminals_min else 'text-danger' }}">
+                    {{ '✓' if readiness.checks.terminals_min else '✗' }} Terminales activas: {{ readiness.metrics.active_terminals }} (mínimo {{ readiness.metrics.min_active_terminals }})
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="small {{ 'text-success' if readiness.checks.students_min else 'text-danger' }}">
+                    {{ '✓' if readiness.checks.students_min else '✗' }} Estudiantes en padrón: {{ readiness.metrics.students_total }} (mínimo 1)
+                </div>
+            </div>
+        </div>
+
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <div>
                 <strong>Estado de votacion:</strong>
@@ -41,6 +73,20 @@
             {% endif %}
         </div>
         <small class="text-muted">Mientras la votacion este abierta, los resultados por candidato permanecen ocultos.</small>
+        {% if not is_viewer %}
+        <form method="post" action="{{ url_for('actualizar_min_terminales') }}" class="row g-2 align-items-end mt-2">
+            <div class="col-sm-4 col-md-3">
+                <label class="form-label mb-1"><small>Mínimo de terminales activas</small></label>
+                <input type="number" min="1" name="min_active_terminals" class="form-control form-control-sm" value="{{ readiness.metrics.min_active_terminals }}" {% if not voting_closed %}disabled{% endif %}>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-outline-primary btn-sm" {% if not voting_closed %}disabled{% endif %}>Guardar umbral</button>
+            </div>
+            {% if not voting_closed %}
+            <div class="col-12"><small class="text-muted">Cierra la votación para modificar este valor.</small></div>
+            {% endif %}
+        </form>
+        {% endif %}
     </div>
 
     <a href="/votaciones/descargar_corte" class="btn btn-primary px-3">Descargar Corte</a>
