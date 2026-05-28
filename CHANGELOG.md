@@ -2,6 +2,12 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.21] - 2026-05-28
+### Changed
+- Mejora completa de vista móvil en mantenimiento: menú lateral colapsable con botón `Menú`.
+- Ajuste de tipografías, espaciados y tamaños de controles para pantallas pequeñas.
+- Cierre automático del menú móvil al seleccionar una opción.
+
 ## [1.0.20] - 2026-05-28
 ### Fixed
 - El botón `Salir` en sesión de visor ahora usa su endpoint correcto (`/votaciones/visor/logout`).

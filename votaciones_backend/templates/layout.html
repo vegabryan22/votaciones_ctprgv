@@ -46,6 +46,7 @@
             padding: 14px 10px;
             z-index: 20;
             overflow-y: auto;
+            transition: transform .2s ease;
         }
 
         .sidebar h4 {
@@ -59,6 +60,9 @@
             margin-left: 270px;
             min-height: 100vh;
             padding: 12px 24px 24px;
+        }
+        .mobile-topbar {
+            display: none;
         }
 
         .content .container {
@@ -131,21 +135,90 @@
         }
 
         @media (max-width: 992px) {
+            .mobile-topbar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                background: linear-gradient(180deg, #0f3d66 0%, #123a5c 100%);
+                color: #fff;
+                padding: 10px 12px;
+                position: sticky;
+                top: 0;
+                z-index: 30;
+                box-shadow: 0 6px 14px rgba(0, 0, 0, .15);
+            }
+            .mobile-topbar .brand {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-weight: 700;
+                font-size: 1rem;
+            }
+            .mobile-menu-btn {
+                border: 1px solid rgba(255,255,255,.35);
+                color: #fff;
+                background: rgba(255,255,255,.1);
+                border-radius: 10px;
+                padding: 6px 10px;
+                font-weight: 600;
+            }
             .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
+                width: 280px;
+                height: 100vh;
+                position: fixed;
+                transform: translateX(-102%);
+                top: 0;
+                left: 0;
+                z-index: 40;
+                padding-top: 64px;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .sidebar .nav-link {
+                font-size: 1rem;
+                padding: 9px 10px;
             }
             .content {
                 margin-left: 0;
                 padding: 14px;
+            }
+            .content .container {
+                padding-left: 4px;
+                padding-right: 4px;
+            }
+            h1, h2, h3 {
+                font-size: clamp(1.45rem, 4.8vw, 1.9rem);
+            }
+            .card {
+                border-radius: 12px;
+            }
+            .btn {
+                min-height: 40px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .content {
+                padding: 10px;
+            }
+            .footer {
+                font-size: .84rem;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="sidebar">
+    <div class="mobile-topbar">
+        <div class="brand">
+            <img src="/votaciones_backend/static/uploads/ctprgv_logo.png" alt="Logo" class="logo" style="margin-right:0;">
+            <span>Mantenimiento</span>
+        </div>
+        <button class="mobile-menu-btn" type="button" onclick="toggleSidebar()">Menú</button>
+    </div>
+
+    <div class="sidebar" id="sidebarMenu">
         <h4 class="text-center">
             <img src="/votaciones_backend/static/uploads/ctprgv_logo.png" alt="Logo del Colegio" class="logo">
             Menú de Mantenimiento
@@ -231,6 +304,18 @@
     
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.getElementById('sidebarMenu');
+            if (sidebar) sidebar.classList.toggle('open');
+        }
+        document.addEventListener('click', function (e) {
+            var sidebar = document.getElementById('sidebarMenu');
+            if (!sidebar || window.innerWidth > 992) return;
+            var clickedLink = e.target.closest('.sidebar a.nav-link, .sidebar button.nav-link');
+            if (clickedLink) sidebar.classList.remove('open');
+        });
+    </script>
 </body>
 
 </html>
