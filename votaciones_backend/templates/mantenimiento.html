@@ -1,7 +1,26 @@
 ﻿{% extends "layout.html" %}
 {% block content %}
-<div class="container mt-4">
-    <h1>Dashboard de Votaciones</h1>
+<div class="container mt-1">
+    <div class="dashboard-head mb-2">
+        <h1 class="mb-0">Dashboard de Votaciones</h1>
+        <div class="action-buttons">
+            <a href="/votaciones/descargar_corte" class="btn btn-outline-primary action-btn">
+                <i class="fas fa-file-download"></i> Descargar corte
+            </a>
+            {% if not is_viewer %}
+            <a href="/votaciones/descargar_acta" class="btn btn-primary action-btn">
+                <i class="fas fa-file-signature"></i> Descargar acta final
+            </a>
+            {% endif %}
+            {% if is_viewer %}
+            <form method="post" action="{{ url_for('viewer_logout') }}" class="m-0">
+                <button type="submit" class="btn btn-outline-secondary action-btn">
+                    <i class="fas fa-sign-out-alt"></i> Salir visor
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
@@ -20,11 +39,11 @@
         <div class="election-topbar">
             <h4 class="election-title">Control de Elección</h4>
             {% if readiness.ready %}
-            <span class="traffic-pill ok">● Verde · Listo para abrir</span>
+            <span class="traffic-pill ok">Listo para abrir</span>
             {% elif ok_count >= 3 %}
-            <span class="traffic-pill warn">● Amarillo · Falta 1 criterio</span>
+            <span class="traffic-pill warn">Pendiente: 1 criterio</span>
             {% else %}
-            <span class="traffic-pill bad">● Rojo · No listo para abrir</span>
+            <span class="traffic-pill bad">No listo</span>
             {% endif %}
         </div>
 
@@ -75,15 +94,15 @@
             {% endif %}
         </div>
 
-        <small class="text-muted d-block mt-1">Mientras la votacion este abierta, los resultados por candidato permanecen ocultos.</small>
+        <small class="text-muted d-block mt-1 mb-1">Mientras la votacion este abierta, los resultados por candidato permanecen ocultos.</small>
         {% if not is_viewer %}
-        <form method="post" action="{{ url_for('actualizar_min_terminales') }}" class="row g-2 align-items-end mt-2">
+        <form method="post" action="{{ url_for('actualizar_min_terminales') }}" class="row g-2 align-items-end mt-1 compact-threshold">
             <div class="col-sm-4 col-md-3">
-                <label class="form-label mb-1"><small>Mínimo de terminales activas</small></label>
-                <input type="number" min="1" name="min_active_terminals" class="form-control form-control-sm" value="{{ readiness.metrics.min_active_terminals }}" {% if not voting_closed %}disabled{% endif %}>
+                <label class="form-label mb-1"><small>Mínimo terminales</small></label>
+                <input type="number" min="1" name="min_active_terminals" class="form-control form-control-sm compact-input" value="{{ readiness.metrics.min_active_terminals }}" {% if not voting_closed %}disabled{% endif %}>
             </div>
             <div class="col-auto">
-                <button type="submit" class="btn btn-outline-primary btn-sm" {% if not voting_closed %}disabled{% endif %}>Guardar umbral</button>
+                <button type="submit" class="btn btn-outline-primary btn-sm compact-btn" {% if not voting_closed %}disabled{% endif %}>Guardar</button>
             </div>
             {% if not voting_closed %}
             <div class="col-12"><small class="text-muted">Cierra la votación para modificar este valor.</small></div>
@@ -92,26 +111,6 @@
         {% endif %}
     </div>
 
-    <div class="card action-bar mb-3">
-        <div class="action-bar-title">Reportes y acciones</div>
-        <div class="action-buttons">
-            <a href="/votaciones/descargar_corte" class="btn btn-outline-primary action-btn">
-                <i class="fas fa-file-download"></i> Descargar corte
-            </a>
-            {% if not is_viewer %}
-            <a href="/votaciones/descargar_acta" class="btn btn-primary action-btn">
-                <i class="fas fa-file-signature"></i> Descargar acta final
-            </a>
-            {% endif %}
-            {% if is_viewer %}
-            <form method="post" action="{{ url_for('viewer_logout') }}" class="m-0">
-                <button type="submit" class="btn btn-outline-secondary action-btn">
-                    <i class="fas fa-sign-out-alt"></i> Salir visor
-                </button>
-            </form>
-            {% endif %}
-        </div>
-    </div>
 </div>
 <div class="container mt-3">
     <div class="content-section">

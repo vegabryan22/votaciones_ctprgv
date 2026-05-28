@@ -64,7 +64,7 @@
 
 .election-control {
     border-radius: 16px;
-    padding: 16px !important;
+    padding: 10px !important;
     border: 1px solid #d9e3ef;
     box-shadow: 0 8px 18px rgba(15, 61, 102, 0.07);
 }
@@ -74,23 +74,23 @@
     justify-content: space-between;
     align-items: center;
     gap: 12px;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
 }
 
 .election-title {
     margin: 0;
-    font-size: 1.15rem;
+    font-size: 1.05rem;
 }
 
 .traffic-pill {
     border-radius: 999px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    padding: 6px 10px;
+    font-size: 0.73rem;
+    font-weight: 600;
+    padding: 3px 8px;
     border: 1px solid transparent;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
 }
 
 .traffic-pill.ok {
@@ -114,16 +114,16 @@
 .check-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(240px, 1fr));
-    gap: 8px;
-    margin: 8px 0 12px;
+    gap: 6px;
+    margin: 6px 0 8px;
 }
 
 .check-chip {
     border: 1px solid #d9e3ef;
     border-radius: 10px;
     background: #f8fbff;
-    padding: 7px 10px;
-    font-size: 0.86rem;
+    padding: 5px 8px;
+    font-size: 0.8rem;
 }
 
 .check-chip.ok {
@@ -140,48 +140,70 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
     flex-wrap: wrap;
+    margin-bottom: 2px;
 }
 
 .control-actions .status-wrap {
-    font-size: 0.92rem;
+    font-size: 0.88rem;
 }
 
-.action-bar {
-    border: 1px solid #d9e3ef;
-    border-radius: 14px;
-    box-shadow: 0 8px 18px rgba(15, 61, 102, 0.06);
-    padding: 12px 14px;
+.compact-threshold .form-label {
+    margin-bottom: 2px !important;
 }
 
-.action-bar-title {
-    font-size: 0.82rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #5f7287;
-    margin-bottom: 10px;
-    font-weight: 700;
+.compact-input {
+    height: 34px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.compact-btn {
+    height: 34px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    min-width: 84px;
+}
+
+.dashboard-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
 .action-buttons {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
+    justify-content: flex-end;
 }
 
 .action-btn {
-    min-width: 190px;
+    min-width: 165px;
+    height: 36px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
     border-radius: 10px;
+    font-size: 0.9rem;
 }
 
 @media (max-width: 992px) {
     .check-grid {
         grid-template-columns: 1fr;
+    }
+
+    .dashboard-head {
+        align-items: stretch;
+    }
+
+    .dashboard-head .action-buttons {
+        width: 100%;
+        justify-content: flex-start;
     }
 
     .content-section {

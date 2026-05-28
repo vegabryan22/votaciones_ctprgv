@@ -2,6 +2,12 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.7] - 2026-05-28
+### Changed
+- Compactación adicional del panel "Control de Elección" (menos padding y separación interna).
+- Ajuste de alturas de input/botón de umbral para vista más densa.
+- Mejora de ubicación visual en cabecera y menor espacio superior del contenido.
+
 ## [1.0.6] - 2026-05-28
 ### Changed
 - Reubicación de botones de reportes en una barra de acciones más ordenada.
