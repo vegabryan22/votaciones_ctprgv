@@ -2,6 +2,17 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.14] - 2026-05-28
+### Added
+- Nuevo módulo dedicado de terminales en `/votaciones/terminales` para gestión centralizada.
+- Acción masiva para eliminar todas las terminales con confirmación explícita `ELIMINAR`.
+
+### Changed
+- Gestión de terminales separada de mantenimiento de sitio para mejorar operación.
+- Redirección de crear/editar/rotar/eliminar terminal hacia el nuevo módulo de terminales.
+- Menú lateral actualizado con opción `Terminales`.
+- Etiquetas de UI renombradas de `Abstencionistas` a `Abstencionismo`.
+
 ## [1.0.12] - 2026-05-28
 ### Fixed
 - Corrección de condición de carrera en registro de voto entre terminales concurrentes.

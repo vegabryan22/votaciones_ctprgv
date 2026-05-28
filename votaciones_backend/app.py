@@ -726,10 +726,16 @@ def abrir_votacion():
 @app.route('/votaciones/mantenimiento-sitio')
 @admin_required
 def mantenimiento_sitio():
+    return render_template('mantenimiento_sitio.html')
+
+
+@app.route('/votaciones/terminales')
+@admin_required
+def terminales_admin():
     terminales = db.listar_terminales()
     voting_status = db.get_voting_status()
     return render_template(
-        'mantenimiento_sitio.html',
+        'terminales_admin.html',
         terminales=terminales,
         voting_closed=voting_status.get("voting_closed", True),
         min_active_terminals=voting_status.get("min_active_terminals", 10)
@@ -805,60 +811,75 @@ def terminal_ping():
 @admin_required
 def crear_terminal():
     if not _require_voting_closed_for_change('crear_terminal'):
-        return redirect(url_for('mantenimiento_sitio'))
+        return redirect(url_for('terminales_admin'))
     codigo = (request.form.get('codigo') or '').strip()
     nombre = (request.form.get('nombre') or '').strip()
     ubicacion = (request.form.get('ubicacion') or '').strip()
     if not codigo or not nombre:
         flash('Codigo y nombre son obligatorios.', 'error')
-        return redirect(url_for('mantenimiento_sitio'))
+        return redirect(url_for('terminales_admin'))
     try:
         token = db.crear_terminal(codigo, nombre, ubicacion)
     except Exception as e:
         flash(f'No se pudo crear terminal: {e}', 'error')
-        return redirect(url_for('mantenimiento_sitio'))
+        return redirect(url_for('terminales_admin'))
     db.registrar_evento_critico(_actor_name(), 'crear_terminal', f'codigo={codigo}, nombre={nombre}, ubicacion={ubicacion}', _client_ip())
     flash(f'Terminal creada. Token: {token}', 'success')
-    return redirect(url_for('mantenimiento_sitio'))
+    return redirect(url_for('terminales_admin'))
 
 
 @app.route('/votaciones/mantenimiento/terminales/actualizar/<int:terminal_id>', methods=['POST'])
 @admin_required
 def actualizar_terminal(terminal_id):
     if not _require_voting_closed_for_change('actualizar_terminal'):
-        return redirect(url_for('mantenimiento_sitio'))
+        return redirect(url_for('terminales_admin'))
     nombre = (request.form.get('nombre') or '').strip()
     ubicacion = (request.form.get('ubicacion') or '').strip()
     activa = request.form.get('activa') == '1'
     if not nombre:
         flash('El nombre es obligatorio.', 'error')
-        return redirect(url_for('mantenimiento_sitio'))
+        return redirect(url_for('terminales_admin'))
     db.actualizar_terminal(terminal_id, nombre, ubicacion, activa)
     db.registrar_evento_critico(_actor_name(), 'actualizar_terminal', f'id={terminal_id}, activa={activa}, nombre={nombre}', _client_ip())
     flash('Terminal actualizada.', 'success')
-    return redirect(url_for('mantenimiento_sitio'))
+    return redirect(url_for('terminales_admin'))
 
 
 @app.route('/votaciones/mantenimiento/terminales/rotar-token/<int:terminal_id>', methods=['POST'])
 @admin_required
 def rotar_token_terminal(terminal_id):
     if not _require_voting_closed_for_change('rotar_token_terminal'):
-        return redirect(url_for('mantenimiento_sitio'))
+        return redirect(url_for('terminales_admin'))
     token = db.rotar_token_terminal(terminal_id)
     db.registrar_evento_critico(_actor_name(), 'rotar_token_terminal', f'id={terminal_id}', _client_ip())
     flash(f'Nuevo token generado: {token}', 'success')
-    return redirect(url_for('mantenimiento_sitio'))
+    return redirect(url_for('terminales_admin'))
 
 
 @app.route('/votaciones/mantenimiento/terminales/eliminar/<int:terminal_id>', methods=['POST'])
 @admin_required
 def eliminar_terminal(terminal_id):
     if not _require_voting_closed_for_change('eliminar_terminal'):
-        return redirect(url_for('mantenimiento_sitio'))
+        return redirect(url_for('terminales_admin'))
     db.eliminar_terminal(terminal_id)
     db.registrar_evento_critico(_actor_name(), 'eliminar_terminal', f'id={terminal_id}', _client_ip())
     flash('Terminal eliminada.', 'success')
-    return redirect(url_for('mantenimiento_sitio'))
+    return redirect(url_for('terminales_admin'))
+
+
+@app.route('/votaciones/mantenimiento/terminales/eliminar-todas', methods=['POST'])
+@admin_required
+def eliminar_todas_terminales():
+    if not _require_voting_closed_for_change('eliminar_todas_terminales'):
+        return redirect(url_for('terminales_admin'))
+    confirmation = (request.form.get('confirmation') or '').strip().upper()
+    if confirmation != 'ELIMINAR':
+        flash('Confirmación inválida. Escribe ELIMINAR.', 'error')
+        return redirect(url_for('terminales_admin'))
+    db.eliminar_todas_terminales()
+    db.registrar_evento_critico(_actor_name(), 'eliminar_todas_terminales', 'Limpieza masiva de terminales', _client_ip())
+    flash('Todas las terminales fueron eliminadas.', 'success')
+    return redirect(url_for('terminales_admin'))
 
 
 @app.route('/votaciones/mantenimiento/reset-padron', methods=['POST'])

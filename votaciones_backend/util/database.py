@@ -686,6 +686,12 @@ def eliminar_terminal(terminal_id):
         cursor.execute("DELETE FROM terminales_votacion WHERE id = %s", (terminal_id,))
 
 
+def eliminar_todas_terminales():
+    ensure_terminales_table()
+    with DBConnection() as cursor:
+        cursor.execute("DELETE FROM terminales_votacion")
+
+
 def marcar_terminal_en_linea(terminal_id):
     ensure_terminales_table()
     with DBConnection() as cursor:

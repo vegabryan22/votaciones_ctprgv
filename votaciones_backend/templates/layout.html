@@ -173,7 +173,12 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link {{ 'active' if request.endpoint in ['abstencionistas', 'exportar_abstencionistas'] else '' }}" href="{{ url_for('abstencionistas') }}">
-                    <i class="fas fa-user-clock"></i> Abstencionistas
+                    <i class="fas fa-user-clock"></i> Abstencionismo
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint == 'terminales_admin' else '' }}" href="{{ url_for('terminales_admin') }}">
+                    <i class="fas fa-desktop"></i> Terminales
                 </a>
             </li>
             <li class="nav-item">
