@@ -2,6 +2,11 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.18] - 2026-05-28
+### Changed
+- Se agregó menú rápido en `layout_front` con accesos directos a `Votar`, `Visor` y `Admin`.
+- Se excluye explícitamente `Terminal admin` del menú público de la vista de votación.
+
 ## [1.0.17] - 2026-05-28
 ### Changed
 - Manual HTML actualizado y alineado al flujo actual del sistema.

@@ -38,6 +38,28 @@
             margin: 24px auto;
             padding: 0 14px 18px;
         }
+        .quick-menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .quick-link {
+            background: #fff;
+            color: var(--brand);
+            border: 1px solid #c8d7ea;
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: .15s ease;
+        }
+        .quick-link:hover { border-color: var(--brand-2); color: var(--brand-2); }
+        .quick-link.active {
+            background: var(--brand-2);
+            border-color: var(--brand-2);
+            color: #fff;
+        }
         .vote-card {
             background: var(--card);
             border-radius: 16px;
@@ -108,6 +130,12 @@
     </header>
 
     <main class="vote-main">
+        <nav class="quick-menu" aria-label="Accesos rápidos">
+            <a class="quick-link {{ 'active' if request.endpoint in ['votar','mostrar_candidatos','gracias','terminal_login','terminal_autoregistro'] else '' }}" href="{{ url_for('votar') }}">Votar</a>
+            <a class="quick-link {{ 'active' if request.endpoint in ['viewer_login','viewer_dashboard'] else '' }}" href="{{ url_for('viewer_login') }}">Visor</a>
+            <a class="quick-link {{ 'active' if request.endpoint == 'login' else '' }}" href="{{ url_for('login') }}">Admin</a>
+        </nav>
+
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
         {% for category, message in messages %}
