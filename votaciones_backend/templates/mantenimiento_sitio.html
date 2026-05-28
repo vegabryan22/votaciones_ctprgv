@@ -11,6 +11,23 @@
     {% endwith %}
 
     <div class="card p-3 mb-3">
+        <h4>Configuración de votación</h4>
+        <p class="text-muted mb-2">Define el mínimo de terminales activas requerido para permitir la apertura de la votación.</p>
+        <form method="post" action="{{ url_for('actualizar_min_terminales') }}" class="row g-2 align-items-end">
+            <div class="col-sm-4 col-md-3">
+                <label class="form-label mb-1">Mínimo terminales activas</label>
+                <input type="number" min="1" name="min_active_terminals" class="form-control form-control-sm" value="{{ min_active_terminals }}" {% if not voting_closed %}disabled{% endif %}>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-outline-primary btn-sm" {% if not voting_closed %}disabled{% endif %}>Guardar</button>
+            </div>
+            {% if not voting_closed %}
+            <div class="col-12"><small class="text-muted">Cierra la votación para modificar este valor.</small></div>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="card p-3 mb-3">
         <h4>Terminales de votacion</h4>
         <p class="text-muted">Registra terminales autorizadas. Solo terminales activas con token valido pueden votar.</p>
         <form method="POST" action="/votaciones/mantenimiento/terminales/crear" class="row g-2 mb-3">

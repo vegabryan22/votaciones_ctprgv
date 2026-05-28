@@ -717,7 +717,13 @@ def abrir_votacion():
 @admin_required
 def mantenimiento_sitio():
     terminales = db.listar_terminales()
-    return render_template('mantenimiento_sitio.html', terminales=terminales)
+    voting_status = db.get_voting_status()
+    return render_template(
+        'mantenimiento_sitio.html',
+        terminales=terminales,
+        voting_closed=voting_status.get("voting_closed", True),
+        min_active_terminals=voting_status.get("min_active_terminals", 10)
+    )
 
 
 @app.route('/votaciones/terminal/login', methods=['GET', 'POST'])

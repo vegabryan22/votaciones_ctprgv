@@ -2,6 +2,11 @@
     let candidateChart = null;
     let participationChart = null;
 
+    const asNumber = (v) => {
+        const n = Number(v);
+        return Number.isFinite(n) ? n : 0;
+    };
+
     function destroyCharts() {
         if (candidateChart) candidateChart.destroy();
         if (participationChart) participationChart.destroy();
@@ -10,14 +15,26 @@
     function renderCharts(data) {
         destroyCharts();
 
+        const participation = data.participation || {};
+        const participantes = asNumber(participation.participantes);
+        const abstencionistas = asNumber(participation.abstencionistas);
+        const chartCandidates = Array.isArray(data.candidates) ? data.candidates : [];
+        const hasCandidateData = data.voting_closed && chartCandidates.some(c => asNumber(c.votos) > 0);
+        const hasParticipationData = (participantes + abstencionistas) > 0;
+
+        $('#candidateChart').toggle(hasCandidateData || !data.voting_closed);
+        $('#candidate_chart_empty').toggle(!hasCandidateData && data.voting_closed);
+        $('#participationChart').toggle(hasParticipationData);
+        $('#participation_chart_empty').toggle(!hasParticipationData);
+
         const candidateCtx = document.getElementById('candidateChart').getContext('2d');
         candidateChart = new Chart(candidateCtx, {
             type: 'bar',
             data: {
-                labels: data.voting_closed ? data.candidates.map(c => c.nombre) : ['Oculto'],
+                labels: data.voting_closed ? chartCandidates.map(c => c.nombre) : ['Oculto'],
                 datasets: [{
                     label: data.voting_closed ? 'Votos por candidato' : 'Resultados ocultos',
-                    data: data.voting_closed ? data.candidates.map(c => c.votos) : [0],
+                    data: data.voting_closed ? chartCandidates.map(c => asNumber(c.votos)) : [0],
                     backgroundColor: 'rgba(30, 112, 191, 0.22)',
                     borderColor: 'rgba(30, 112, 191, 1)',
                     borderWidth: 1
@@ -41,7 +58,7 @@
             data: {
                 labels: ['Participacion', 'Abstencion'],
                 datasets: [{
-                    data: [data.participation.participantes, data.participation.abstencionistas],
+                    data: [participantes, abstencionistas],
                     backgroundColor: ['rgba(25, 135, 84, 0.32)', 'rgba(220, 53, 69, 0.30)'],
                     borderColor: ['rgba(25, 135, 84, 0.9)', 'rgba(220, 53, 69, 0.9)'],
                     borderWidth: 1
@@ -59,11 +76,19 @@
         $.get('/votaciones/api/voting-stats', function (data) {
             $('#candidate_stats').html('');
 
+            const participation = data.participation || {};
+            const tasaParticipacion = asNumber(participation.tasa_participacion);
+            const tasaAbstencion = asNumber(participation.tasa_abstencionismo);
+            const participantes = asNumber(participation.participantes);
+            const abstencionistas = asNumber(participation.abstencionistas);
+            const candidates = Array.isArray(data.candidates) ? data.candidates : [];
+
             if (data.voting_closed && !data.is_viewer) {
                 $('#candidate_hidden_notice').hide();
-                data.candidates.forEach(function (candidate) {
+                candidates.forEach(function (candidate) {
+                    const porcentaje = asNumber(candidate.porcentaje);
                     $('#candidate_stats').append(
-                        '<div><p class="text-large">' + candidate.nombre + ': ' + candidate.porcentaje + '%</p>' +
+                        '<div><p class="text-large">' + candidate.nombre + ': ' + porcentaje.toFixed(2) + '%</p>' +
                         '<img src="/votaciones_backend/static/uploads/' + candidate.imagen + '" class="party-image" alt="Imagen de ' + candidate.nombre + '"></div>'
                     );
                 });
@@ -71,8 +96,10 @@
                 $('#candidate_hidden_notice').show();
             }
 
-            $('#participation').text(data.participation.tasa_participacion + '% Participacion');
-            $('#abstention').text(data.participation.tasa_abstencionismo + '% Abstencion');
+            $('#participation').text(tasaParticipacion.toFixed(2) + '% Participacion');
+            $('#abstention').text(tasaAbstencion.toFixed(2) + '% Abstencion');
+            $('#quick_participantes').text(participantes);
+            $('#quick_abstencionistas').text(abstencionistas);
 
             renderCharts(data);
         });

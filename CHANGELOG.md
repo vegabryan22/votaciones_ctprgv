@@ -2,6 +2,15 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.8] - 2026-05-28
+### Changed
+- Reorganizacion del dashboard para reducir huecos y mejorar simetria entre contenedores.
+- Reubicacion y compactacion de controles de accion para mejor balance visual.
+- Mejora del formateo en cuadros de estadisticas y tarjetas de resumen rapido.
+- Manejo robusto de valores nulos en estadisticas (mostrar 0.00% en lugar de null%).
+- Estado visual de graficas sin datos con mensajes compactos y centrados.
+- Movimiento de configuracion de minimo de terminales a mantenimiento de sitio.
+
 ## [1.0.7] - 2026-05-28
 ### Changed
 - Compactación adicional del panel "Control de Elección" (menos padding y separación interna).
