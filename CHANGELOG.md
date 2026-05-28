@@ -2,6 +2,13 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.22] - 2026-05-28
+### Fixed
+- Dashboard: se evita repintar/recrear gráficas cuando no hay cambios de datos para eliminar recarga visual innecesaria.
+- Ajuste de sondeo de estadísticas a 12 segundos para reducir parpadeo en móvil.
+- Candidatos: normalización de nombre de archivo de imagen con fallback a `default.png` cuando la imagen no existe.
+- Corrección en edición de candidato para guardar imagen en `static/uploads` (ruta correcta en servidor).
+
 ## [1.0.21] - 2026-05-28
 ### Changed
 - Mejora completa de vista móvil en mantenimiento: menú lateral colapsable con botón `Menú`.

@@ -1,6 +1,7 @@
 ﻿$(document).ready(function () {
     let candidateChart = null;
     let participationChart = null;
+    let lastRenderKey = null;
 
     const asNumber = (v) => {
         const n = Number(v);
@@ -101,10 +102,20 @@
             $('#quick_participantes').text(participantes);
             $('#quick_abstencionistas').text(abstencionistas);
 
-            renderCharts(data);
+            const renderKey = JSON.stringify({
+                voting_closed: !!data.voting_closed,
+                is_viewer: !!data.is_viewer,
+                candidates: candidates.map(c => [c.nombre, asNumber(c.votos), c.imagen]),
+                participation: [participantes, abstencionistas, tasaParticipacion, tasaAbstencion]
+            });
+
+            if (renderKey !== lastRenderKey) {
+                renderCharts(data);
+                lastRenderKey = renderKey;
+            }
         });
     }
 
     fetchData();
-    setInterval(fetchData, 5000);
+    setInterval(fetchData, 12000);
 });

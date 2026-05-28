@@ -34,6 +34,23 @@ def _read_system_version():
 def inject_system_version():
     return {'system_version': _read_system_version()}
 
+
+def _safe_candidate_image_name(raw_value):
+    image_name = os.path.basename((raw_value or '').strip())
+    if not image_name:
+        return 'default.png'
+    image_path = os.path.join(app.config['UPLOAD_FOLDER'], image_name)
+    return image_name if os.path.exists(image_path) else 'default.png'
+
+
+def _normalize_candidate_images(candidates):
+    normalized = []
+    for c in candidates or []:
+        item = dict(c)
+        item['imagen'] = _safe_candidate_image_name(item.get('imagen'))
+        normalized.append(item)
+    return normalized
+
 db.ensure_voting_settings()
 db.ensure_terminales_table()
 db.ensure_bitacora_table()
@@ -292,6 +309,7 @@ def voting_stats():
         candidate_stats = []
     else:
         candidate_stats = db.get_voting_stats_by_candidate() if status["voting_closed"] else []
+    candidate_stats = _normalize_candidate_images(candidate_stats)
     participation_stats = db.get_participation_stats()
     level_stats = db.get_participation_by_level()
     return jsonify({
@@ -396,7 +414,7 @@ def candidatos():
         flash('Operación completada correctamente', 'success')
         return redirect(url_for('candidatos'))
     else:
-        candidatos = db.obtener_candidatos()
+        candidatos = _normalize_candidate_images(db.obtener_candidatos())
         return render_template('mantenimiento_candidatos.html', candidatos=candidatos)
 
 
@@ -409,9 +427,9 @@ def actualizar_candidato(id):
         filename = secure_filename(imagen.filename) if imagen else None
 
         if filename:
-            imagen_path = filename
+            imagen_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             imagen.save(imagen_path)
-        db.actualizar_candidato(id, nombre, imagen_path if filename else None)
+        db.actualizar_candidato(id, nombre, filename if filename else None)
         flash('Candidato actualizado correctamente', 'success')
         return redirect(url_for('candidatos'))
     else:
@@ -441,7 +459,7 @@ def mostrar_candidatos():
     if 'estudiante_id' not in session:
         return redirect(url_for('votar'))
     
-    candidatos = db.obtener_candidatos_activos()
+    candidatos = _normalize_candidate_images(db.obtener_candidatos_activos())
     return render_template('lista_candidatos.html', candidatos=candidatos)
 
 
