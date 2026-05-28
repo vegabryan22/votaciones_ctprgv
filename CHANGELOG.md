@@ -2,6 +2,11 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.5] - 2026-05-28
+### Fixed
+- Corrección de caracteres UTF-8 dañados en la plantilla base de mantenimiento (`layout.html`).
+- Restauración de textos con acentos correctos en menú y comentarios de plantilla.
+
 ## [1.0.4] - 2026-05-28
 ### Changed
 - Rediseño compacto del panel "Control de Elección" para mejorar legibilidad y reducir altura visual.
