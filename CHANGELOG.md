@@ -2,6 +2,12 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.15] - 2026-05-28
+### Changed
+- Módulo de terminales: eliminación masiva simplificada a botón superior con confirmación visual.
+- Se eliminó el requisito de escribir `ELIMINAR` para borrar todas las terminales.
+- Se retiró la tarjeta inferior de limpieza masiva para una interfaz más limpia.
+
 ## [1.0.14] - 2026-05-28
 ### Added
 - Nuevo módulo dedicado de terminales en `/votaciones/terminales` para gestión centralizada.

@@ -28,7 +28,12 @@
     </div>
 
     <div class="card p-3 mb-3">
-        <h4>Terminales de votacion</h4>
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+            <h4 class="mb-0">Terminales de votacion</h4>
+            <form method="POST" action="/votaciones/mantenimiento/terminales/eliminar-todas" onsubmit="return confirm('Se eliminaran TODAS las terminales. Continuar?');">
+                <button type="submit" class="btn btn-danger btn-sm">Eliminar todas</button>
+            </form>
+        </div>
         <p class="text-muted">Registra terminales autorizadas. Solo terminales activas con token valido pueden votar.</p>
         <form method="POST" action="/votaciones/mantenimiento/terminales/crear" class="row g-2 mb-3">
             <div class="col-md-3">
@@ -94,18 +99,6 @@
                 </tbody>
             </table>
         </div>
-    </div>
-
-    <div class="card p-3">
-        <h4>Limpieza masiva de terminales</h4>
-        <p class="text-danger mb-2">Este proceso elimina todas las terminales registradas de una sola vez.</p>
-        <form method="POST" action="/votaciones/mantenimiento/terminales/eliminar-todas" onsubmit="return confirm('Se eliminaran TODAS las terminales. Continuar?');">
-            <div class="mb-2" style="max-width: 360px;">
-                <label for="confirmation_term" class="form-label">Escribe ELIMINAR para confirmar:</label>
-                <input id="confirmation_term" name="confirmation" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-danger">Eliminar todas las terminales</button>
-        </form>
     </div>
 </div>
 {% endblock %}

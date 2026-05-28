@@ -872,10 +872,6 @@ def eliminar_terminal(terminal_id):
 def eliminar_todas_terminales():
     if not _require_voting_closed_for_change('eliminar_todas_terminales'):
         return redirect(url_for('terminales_admin'))
-    confirmation = (request.form.get('confirmation') or '').strip().upper()
-    if confirmation != 'ELIMINAR':
-        flash('Confirmación inválida. Escribe ELIMINAR.', 'error')
-        return redirect(url_for('terminales_admin'))
     db.eliminar_todas_terminales()
     db.registrar_evento_critico(_actor_name(), 'eliminar_todas_terminales', 'Limpieza masiva de terminales', _client_ip())
     flash('Todas las terminales fueron eliminadas.', 'success')
