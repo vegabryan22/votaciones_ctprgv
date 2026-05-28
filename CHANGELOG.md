@@ -2,6 +2,12 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.19] - 2026-05-28
+### Changed
+- Login de `Visor` unificado al mismo `layout_front` que `Admin` y flujo de votación.
+- Rediseño visual de formularios de acceso `Admin` y `Visor` con estilo consistente.
+- Header azul ajustado: logos más grandes y más cercanos a los bordes para mejor presencia visual.
+
 ## [1.0.18] - 2026-05-28
 ### Changed
 - Se agregó menú rápido en `layout_front` con accesos directos a `Votar`, `Visor` y `Admin`.
