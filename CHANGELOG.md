@@ -2,6 +2,15 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.3] - 2026-05-28
+### Added
+- Visualizacion de version del sistema en el pie de pagina (layouts de mantenimiento y votacion), leida desde archivo `VERSION`.
+
+### Changed
+- Mejora visual del dashboard: tarjetas mas limpias, mejor espaciado y composicion mas consistente.
+- Reduccion del tamano visual de graficos para una lectura mas comoda.
+- Ajustes de colores/leyendas en Chart.js para mayor claridad.
+
 ## [1.0.2] - 2026-05-28
 ### Added
 - Semaforo operativo (verde/amarillo/rojo) para evaluar preparacion antes de abrir votacion.

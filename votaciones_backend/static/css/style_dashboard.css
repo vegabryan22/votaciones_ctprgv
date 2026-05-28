@@ -1,31 +1,79 @@
-.chart-container {
-    width: 100%;
-    height: auto;
-}
-.chart-canvas {
-    width: 50%; /* Full width for smaller devices, adjust as needed */
-    float: left;
-    padding: 15px;
-}
-.party-image {
-    width: 80px;  /* Adjusted size */
-    height: auto;
-    display: block;
-    margin-top: 10px;
-}
 .content-section {
-    display: flex;
-    justify-content: space-between; /* Align elements side by side */
-    align-items: center; /* Align vertically */
+    display: grid;
+    grid-template-columns: 1.3fr 0.9fr;
+    gap: 18px;
+    align-items: start;
+    margin-top: 14px;
 }
-.stats-container {
-    width: 50%; /* Matching width with chart canvas */
+
+.stats-container,
+.chart-canvas {
+    background: #ffffff;
+    border: 1px solid #d9e3ef;
+    border-radius: 14px;
+    box-shadow: 0 8px 18px rgba(15, 61, 102, 0.07);
+    padding: 16px;
 }
+
+.stats-container h2 {
+    font-size: 1.65rem;
+    margin-bottom: 12px;
+}
+
+.chart-canvas {
+    max-width: 420px;
+    justify-self: end;
+    width: 100%;
+    min-height: 280px;
+}
+
+.chart-canvas canvas {
+    width: 100% !important;
+    height: 250px !important;
+}
+
+.party-image {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    border-radius: 10px;
+    border: 1px solid #d9e3ef;
+    background: #f8fbff;
+    padding: 4px;
+    margin-top: 8px;
+}
+
 .text-large {
-    font-size: 1.2em; /* Larger text for readability */
+    font-size: 1.08rem;
+    margin-bottom: 8px;
+    color: #243b53;
 }
+
 .party-stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Cuadrícula 3x3 */
-    gap: 15px; /* Espacio entre elementos de la cuadrícula */
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 12px;
+}
+
+.party-stats > div {
+    border: 1px solid #e4edf6;
+    border-radius: 12px;
+    padding: 10px;
+    background: #f9fcff;
+}
+
+@media (max-width: 992px) {
+    .content-section {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-canvas {
+        max-width: 100%;
+        justify-self: stretch;
+        min-height: 230px;
+    }
+
+    .chart-canvas canvas {
+        height: 220px !important;
+    }
 }

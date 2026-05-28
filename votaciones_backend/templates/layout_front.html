@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -118,7 +118,7 @@
 
         {% block content %}{% endblock %}
 
-        <div class="vote-footer">CTPRGV - Departamento de Redes</div>
+        <div class="vote-footer">CTPRGV - Departamento de Redes - v{{ system_version }}</div>
     </main>
     {% if session.get('terminal_id') %}
     <script>
@@ -130,3 +130,4 @@
     {% endif %}
 </body>
 </html>
+

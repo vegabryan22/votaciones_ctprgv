@@ -17,6 +17,23 @@ app.config['UPLOAD_FOLDER'] = os.path.join(BASE_DIR, 'static', 'uploads')
 app.config['APPLICATION_ROOT'] = '/votaciones'
 app.secret_key = '123'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+
+
+def _read_system_version():
+    root_dir = os.path.dirname(BASE_DIR)
+    version_file = os.path.join(root_dir, 'VERSION')
+    try:
+        with open(version_file, 'r', encoding='utf-8') as fh:
+            version = fh.read().strip()
+            return version or 'dev'
+    except Exception:
+        return 'dev'
+
+
+@app.context_processor
+def inject_system_version():
+    return {'system_version': _read_system_version()}
+
 db.ensure_voting_settings()
 db.ensure_terminales_table()
 db.ensure_bitacora_table()

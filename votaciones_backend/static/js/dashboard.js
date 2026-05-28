@@ -18,12 +18,21 @@
                 datasets: [{
                     label: data.voting_closed ? 'Votos por candidato' : 'Resultados ocultos',
                     data: data.voting_closed ? data.candidates.map(c => c.votos) : [0],
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(30, 112, 191, 0.22)',
+                    borderColor: 'rgba(30, 112, 191, 1)',
                     borderWidth: 1
                 }]
             },
-            options: { scales: { y: { beginAtZero: true } } }
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: true, position: 'top' }
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { precision: 0 } },
+                    x: { ticks: { maxRotation: 40, minRotation: 0 } }
+                }
+            }
         });
 
         const pCtx = document.getElementById('participationChart').getContext('2d');
@@ -33,10 +42,15 @@
                 labels: ['Participacion', 'Abstencion'],
                 datasets: [{
                     data: [data.participation.participantes, data.participation.abstencionistas],
-                    backgroundColor: ['rgba(0,255,0,0.2)', 'rgba(255,0,0,0.2)'],
-                    borderColor: ['rgba(255,255,255,1)', 'rgba(255,255,255,1)'],
+                    backgroundColor: ['rgba(25, 135, 84, 0.32)', 'rgba(220, 53, 69, 0.30)'],
+                    borderColor: ['rgba(25, 135, 84, 0.9)', 'rgba(220, 53, 69, 0.9)'],
                     borderWidth: 1
                 }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                cutout: '62%',
+                plugins: { legend: { position: 'top' } }
             }
         });
     }
