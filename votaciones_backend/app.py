@@ -608,6 +608,48 @@ def manual_uso():
     return render_template('manual.html')
 
 
+def _incidencias_hoy():
+    fecha = "2026-05-29"
+    cambios_cedula = [
+        {"id": 754, "nombre": "KENNETH JOSE MOLINA MEJIA", "cedula_anterior": "YR202318692", "cedula_nueva": "155812925121"},
+        {"id": 672, "nombre": "RASHEL REGINA FLORES ROJAS", "cedula_anterior": "YR202222970", "cedula_nueva": "155830545317"},
+        {"id": 801, "nombre": "STEFANY MASSIEL RODRIGUEZ HERRERA", "cedula_anterior": "YR202318672", "cedula_nueva": "C03802521"},
+        {"id": 476, "nombre": "CLAUDIA GARCIA SIERRA", "cedula_anterior": "YR202434360", "cedula_nueva": "119201213515"},
+        {"id": 553, "nombre": "KEVIN DAVID GONZALEZ GONZALEZ", "cedula_anterior": "YR202318722", "cedula_nueva": "186202007307"},
+        {"id": 157, "nombre": "HARLYNG JOHEL CRUZ GUTIERREZ", "cedula_anterior": "YR202235905", "cedula_nueva": "155827736901"},
+    ]
+    inserciones = [
+        {"id": 1167, "nombre": "ISAAC GAEL", "apellido1": "HIDALGO", "apellido2": "UGARTE", "cedula": "121140699", "nivel": "8-4B"},
+        {"id": 1168, "nombre": "SAMUEL JOSUE", "apellido1": "VARGAS", "apellido2": "ALPIZAR", "cedula": "121930290", "nivel": "7-2B"},
+    ]
+    return fecha, cambios_cedula, inserciones
+
+
+@app.route('/votaciones/incidencias')
+@admin_required
+def incidencias_hoy():
+    fecha, cambios_cedula, inserciones = _incidencias_hoy()
+    return render_template(
+        'incidencias.html',
+        fecha=fecha,
+        cambios_cedula=cambios_cedula,
+        inserciones=inserciones
+    )
+
+
+@app.route('/votaciones/incidencias/pdf')
+@admin_required
+def incidencias_hoy_pdf():
+    fecha, cambios_cedula, inserciones = _incidencias_hoy()
+    pdf_bytes = pdf_gen.generar_pdf_incidencias(fecha, cambios_cedula, inserciones)
+    return send_file(
+        io.BytesIO(pdf_bytes),
+        as_attachment=True,
+        download_name=f'informe_incidencias_{fecha}.pdf',
+        mimetype='application/pdf'
+    )
+
+
 @app.route('/votaciones/visor/login', methods=['GET', 'POST'])
 def viewer_login():
     if request.method == 'POST':

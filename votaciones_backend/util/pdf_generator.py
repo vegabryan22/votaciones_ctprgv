@@ -227,3 +227,62 @@ def generar_pdf_corte(datos):
     buffer.seek(0)  # Regresar al inicio del buffer
     return buffer.getvalue()  # Devuelve los bytes del buffer
 
+
+def generar_pdf_incidencias(fecha, cambios_cedula, inserciones):
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter, topMargin=25)
+    story = []
+    styles = getSampleStyleSheet()
+
+    story.append(Paragraph("Informe de incidencias del padrón", styles['Title']))
+    story.append(Paragraph(f"Fecha: {fecha}", styles['Normal']))
+    story.append(Spacer(1, 12))
+
+    resumen = [
+        ["Tipo", "Cantidad"],
+        ["Correcciones de cédula", str(len(cambios_cedula))],
+        ["Inserciones manuales", str(len(inserciones))],
+        ["Total", str(len(cambios_cedula) + len(inserciones))]
+    ]
+    t_res = Table(resumen, colWidths=[260, 120])
+    t_res.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.gray),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.lightgrey),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('ALIGN', (1, 1), (1, -1), 'CENTER'),
+    ]))
+    story.append(t_res)
+    story.append(Spacer(1, 12))
+
+    story.append(Paragraph("Correcciones de cédula", styles['Heading3']))
+    data_c = [["ID", "Nombre", "Cédula anterior", "Cédula nueva"]]
+    for c in cambios_cedula:
+        data_c.append([str(c["id"]), c["nombre"], c["cedula_anterior"], c["cedula_nueva"]])
+    t_c = Table(data_c, colWidths=[40, 210, 140, 140])
+    t_c.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.gray),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('GRID', (0, 0), (-1, -1), 0.4, colors.lightgrey),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    ]))
+    story.append(t_c)
+    story.append(Spacer(1, 12))
+
+    story.append(Paragraph("Inserciones manuales", styles['Heading3']))
+    data_i = [["ID", "Nombre", "Apellido1", "Apellido2", "Cédula", "Nivel"]]
+    for i in inserciones:
+        data_i.append([str(i["id"]), i["nombre"], i["apellido1"], i["apellido2"], i["cedula"], i["nivel"]])
+    t_i = Table(data_i, colWidths=[35, 100, 90, 90, 110, 50])
+    t_i.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.gray),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('GRID', (0, 0), (-1, -1), 0.4, colors.lightgrey),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+    ]))
+    story.append(t_i)
+
+    doc.build(story)
+    buffer.seek(0)
+    return buffer.getvalue()
+

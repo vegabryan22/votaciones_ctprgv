@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-2">
+    <div class="card p-4 mb-3">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div>
+                <h1 class="mb-1">Informe de incidencias</h1>
+                <p class="text-muted mb-0">Fecha: {{ fecha }}</p>
+            </div>
+            <a class="btn btn-primary" href="{{ url_for('incidencias_hoy_pdf') }}">
+                <i class="fas fa-file-pdf"></i> Exportar PDF
+            </a>
+        </div>
+    </div>
+
+    <div class="card p-4 mb-3">
+        <h3>Resumen</h3>
+        <ul class="mb-0">
+            <li>Correcciones de cédula: {{ cambios_cedula|length }}</li>
+            <li>Inserciones manuales: {{ inserciones|length }}</li>
+            <li>Total incidencias: {{ (cambios_cedula|length) + (inserciones|length) }}</li>
+        </ul>
+    </div>
+
+    <div class="card p-4 mb-3">
+        <h3>Correcciones de cédula</h3>
+        <div class="table-responsive">
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr><th>ID</th><th>Nombre</th><th>Cédula anterior</th><th>Cédula nueva</th></tr>
+                </thead>
+                <tbody>
+                    {% for c in cambios_cedula %}
+                    <tr>
+                        <td>{{ c.id }}</td>
+                        <td>{{ c.nombre }}</td>
+                        <td>{{ c.cedula_anterior }}</td>
+                        <td>{{ c.cedula_nueva }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card p-4">
+        <h3>Inserciones manuales</h3>
+        <div class="table-responsive">
+            <table class="table table-sm table-striped">
+                <thead>
+                    <tr><th>ID</th><th>Nombre</th><th>Apellido1</th><th>Apellido2</th><th>Cédula</th><th>Nivel</th></tr>
+                </thead>
+                <tbody>
+                    {% for i in inserciones %}
+                    <tr>
+                        <td>{{ i.id }}</td>
+                        <td>{{ i.nombre }}</td>
+                        <td>{{ i.apellido1 }}</td>
+                        <td>{{ i.apellido2 }}</td>
+                        <td>{{ i.cedula }}</td>
+                        <td>{{ i.nivel }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

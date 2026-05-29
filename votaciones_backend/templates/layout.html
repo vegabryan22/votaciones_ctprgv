@@ -275,6 +275,11 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link {{ 'active' if request.endpoint in ['incidencias_hoy', 'incidencias_hoy_pdf'] else '' }}" href="{{ url_for('incidencias_hoy') }}">
+                    <i class="fas fa-file-alt"></i> Informe incidencias
+                </a>
+            </li>
+            <li class="nav-item">
                 {% if session.get('viewer_auth') %}
                 <form method="post" action="{{ url_for('viewer_logout') }}" class="m-0">
                     <button type="submit" class="nav-link border-0 bg-transparent w-100 text-start">

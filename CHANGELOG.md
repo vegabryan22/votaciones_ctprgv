@@ -2,6 +2,12 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.24] - 2026-05-29
+### Added
+- Informe de incidencias en HTML accesible desde la app (`/votaciones/incidencias`).
+- Exportación del informe de incidencias a PDF (`/votaciones/incidencias/pdf`).
+- Opción de menú lateral: `Informe incidencias`.
+
 ## [1.0.23] - 2026-05-28
 ### Changed
 - Dashboard móvil: tarjetas de partidos en estadísticas ahora se muestran en 2 columnas por fila.
