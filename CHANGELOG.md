@@ -2,6 +2,13 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.25] - 2026-05-29
+### Changed
+- Terminales: ahora se permite desactivar terminales durante votación abierta (modo contingencia).
+- Nuevo botón `Desactivar todas` para inactivación masiva inmediata de terminales.
+- Durante votación abierta se bloquea activar terminales, rotar token, eliminar y crear terminales.
+- Se mantiene edición completa de terminales solo cuando la votación está cerrada.
+
 ## [1.0.24] - 2026-05-29
 ### Added
 - Informe de incidencias en HTML accesible desde la app (`/votaciones/incidencias`).

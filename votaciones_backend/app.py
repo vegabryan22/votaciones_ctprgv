@@ -892,14 +892,29 @@ def crear_terminal():
 @app.route('/votaciones/mantenimiento/terminales/actualizar/<int:terminal_id>', methods=['POST'])
 @admin_required
 def actualizar_terminal(terminal_id):
-    if not _require_voting_closed_for_change('actualizar_terminal'):
-        return redirect(url_for('terminales_admin'))
     nombre = (request.form.get('nombre') or '').strip()
     ubicacion = (request.form.get('ubicacion') or '').strip()
     activa = request.form.get('activa') == '1'
+    terminal = db.obtener_terminal_por_id(terminal_id)
+    if not terminal:
+        flash('Terminal no encontrada.', 'error')
+        return redirect(url_for('terminales_admin'))
+
+    # Durante votación abierta solo se permite desactivar terminales por contingencia.
+    if not _voting_is_closed():
+        if activa:
+            flash('Durante votación abierta solo se permite desactivar terminales.', 'error')
+            db.registrar_evento_critico(_actor_name(), 'bloqueo_activar_terminal_votacion_abierta', f'id={terminal_id}', _client_ip())
+            return redirect(url_for('terminales_admin'))
+        db.actualizar_terminal(terminal_id, terminal.get('nombre') or '', terminal.get('ubicacion') or '', False)
+        db.registrar_evento_critico(_actor_name(), 'desactivar_terminal_votacion_abierta', f'id={terminal_id}', _client_ip())
+        flash('Terminal desactivada en contingencia.', 'success')
+        return redirect(url_for('terminales_admin'))
+
     if not nombre:
         flash('El nombre es obligatorio.', 'error')
         return redirect(url_for('terminales_admin'))
+
     db.actualizar_terminal(terminal_id, nombre, ubicacion, activa)
     db.registrar_evento_critico(_actor_name(), 'actualizar_terminal', f'id={terminal_id}, activa={activa}, nombre={nombre}', _client_ip())
     flash('Terminal actualizada.', 'success')
@@ -936,6 +951,15 @@ def eliminar_todas_terminales():
     db.eliminar_todas_terminales()
     db.registrar_evento_critico(_actor_name(), 'eliminar_todas_terminales', 'Limpieza masiva de terminales', _client_ip())
     flash('Todas las terminales fueron eliminadas.', 'success')
+    return redirect(url_for('terminales_admin'))
+
+
+@app.route('/votaciones/mantenimiento/terminales/desactivar-todas', methods=['POST'])
+@admin_required
+def desactivar_todas_terminales():
+    total = db.desactivar_todas_terminales()
+    db.registrar_evento_critico(_actor_name(), 'desactivar_todas_terminales', f'total={total}', _client_ip())
+    flash(f'Se desactivaron {total} terminales.', 'success')
     return redirect(url_for('terminales_admin'))
 
 

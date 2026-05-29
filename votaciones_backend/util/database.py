@@ -692,6 +692,13 @@ def eliminar_todas_terminales():
         cursor.execute("DELETE FROM terminales_votacion")
 
 
+def desactivar_todas_terminales():
+    ensure_terminales_table()
+    with DBConnection() as cursor:
+        cursor.execute("UPDATE terminales_votacion SET activa = 0")
+        return cursor.rowcount
+
+
 def marcar_terminal_en_linea(terminal_id):
     ensure_terminales_table()
     with DBConnection() as cursor:

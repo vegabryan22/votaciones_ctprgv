@@ -30,23 +30,28 @@
     <div class="card p-3 mb-3">
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
             <h4 class="mb-0">Terminales de votacion</h4>
-            <form method="POST" action="/votaciones/mantenimiento/terminales/eliminar-todas" onsubmit="return confirm('Se eliminaran TODAS las terminales. Continuar?');">
-                <button type="submit" class="btn btn-danger btn-sm">Eliminar todas</button>
-            </form>
+            <div class="d-flex gap-2">
+                <form method="POST" action="/votaciones/mantenimiento/terminales/desactivar-todas" onsubmit="return confirm('Se desactivaran TODAS las terminales. Continuar?');">
+                    <button type="submit" class="btn btn-warning btn-sm">Desactivar todas</button>
+                </form>
+                <form method="POST" action="/votaciones/mantenimiento/terminales/eliminar-todas" onsubmit="return confirm('Se eliminaran TODAS las terminales. Continuar?');">
+                    <button type="submit" class="btn btn-danger btn-sm" {% if not voting_closed %}disabled{% endif %}>Eliminar todas</button>
+                </form>
+            </div>
         </div>
         <p class="text-muted">Registra terminales autorizadas. Solo terminales activas con token valido pueden votar.</p>
         <form method="POST" action="/votaciones/mantenimiento/terminales/crear" class="row g-2 mb-3">
             <div class="col-md-3">
-                <input name="codigo" class="form-control" placeholder="Codigo (ej: LAB-A-01)" required>
+                <input name="codigo" class="form-control" placeholder="Codigo (ej: LAB-A-01)" required {% if not voting_closed %}disabled{% endif %}>
             </div>
             <div class="col-md-3">
-                <input name="nombre" class="form-control" placeholder="Nombre terminal" required>
+                <input name="nombre" class="form-control" placeholder="Nombre terminal" required {% if not voting_closed %}disabled{% endif %}>
             </div>
             <div class="col-md-4">
-                <input name="ubicacion" class="form-control" placeholder="Ubicacion">
+                <input name="ubicacion" class="form-control" placeholder="Ubicacion" {% if not voting_closed %}disabled{% endif %}>
             </div>
             <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">Agregar terminal</button>
+                <button type="submit" class="btn btn-primary w-100" {% if not voting_closed %}disabled{% endif %}>Agregar terminal</button>
             </div>
         </form>
 
@@ -83,13 +88,13 @@
                                 <input type="hidden" name="nombre" value="{{ t.nombre }}">
                                 <input type="hidden" name="ubicacion" value="{{ t.ubicacion or '' }}">
                                 <input type="hidden" name="activa" value="{{ 0 if t.activa else 1 }}">
-                                <button class="btn btn-sm btn-outline-secondary" type="submit">{{ 'Desactivar' if t.activa else 'Activar' }}</button>
+                                <button class="btn btn-sm btn-outline-secondary" type="submit" {% if (not voting_closed) and (not t.activa) %}disabled{% endif %}>{{ 'Desactivar' if t.activa else 'Activar' }}</button>
                             </form>
                             <form method="POST" action="/votaciones/mantenimiento/terminales/rotar-token/{{ t.id }}" class="d-inline" onsubmit="return confirm('Se generara un nuevo token. Continuar?');">
-                                <button class="btn btn-sm btn-outline-primary" type="submit">Rotar token</button>
+                                <button class="btn btn-sm btn-outline-primary" type="submit" {% if not voting_closed %}disabled{% endif %}>Rotar token</button>
                             </form>
                             <form method="POST" action="/votaciones/mantenimiento/terminales/eliminar/{{ t.id }}" class="d-inline" onsubmit="return confirm('Eliminar terminal?');">
-                                <button class="btn btn-sm btn-outline-danger" type="submit">Eliminar</button>
+                                <button class="btn btn-sm btn-outline-danger" type="submit" {% if not voting_closed %}disabled{% endif %}>Eliminar</button>
                             </form>
                         </td>
                     </tr>
