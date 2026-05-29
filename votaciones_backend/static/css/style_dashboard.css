@@ -96,11 +96,50 @@
 
 .stat-pill {
     border: 1px solid #d9e3ef;
-    border-radius: 10px;
+    border-radius: 12px;
     background: #f8fbff;
-    padding: 8px 10px;
+    padding: 10px 12px;
     margin: 0;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7);
+}
+
+.kpi-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: .2px;
+}
+
+.kpi-label {
+    font-size: .95rem;
+    font-weight: 700;
+    opacity: .9;
+}
+
+.kpi-participation {
+    border-color: #bfe8d1;
+    background: linear-gradient(90deg, #ecfbf2 0%, #f7fffb 100%);
+    color: #146c43;
+}
+
+.kpi-abstention {
+    border-color: #f5c2c7;
+    background: linear-gradient(90deg, #fff3f4 0%, #fffafb 100%);
+    color: #9f1239;
+}
+
+@media (max-width: 576px) {
+    .kpi-value {
+        font-size: 1.25rem;
+    }
+    .kpi-label {
+        font-size: .88rem;
+    }
 }
 
 .election-control {

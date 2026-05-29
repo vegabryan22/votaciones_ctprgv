@@ -2,6 +2,12 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.26] - 2026-05-29
+### Changed
+- Rediseño visual de `Estadísticas Generales` en dashboard: KPIs con número destacado y etiqueta separada.
+- Diferenciación visual por color entre Participación (verde) y Abstención (rojo suave).
+- Ajustes responsive para mejor lectura de KPIs en móvil.
+
 ## [1.0.25] - 2026-05-29
 ### Changed
 - Terminales: ahora se permite desactivar terminales durante votación abierta (modo contingencia).

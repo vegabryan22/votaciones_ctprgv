@@ -97,8 +97,14 @@
                 $('#candidate_hidden_notice').show();
             }
 
-            $('#participation').text(tasaParticipacion.toFixed(2) + '% Participacion');
-            $('#abstention').text(tasaAbstencion.toFixed(2) + '% Abstencion');
+            $('#participation')
+                .removeClass('kpi-abstention')
+                .addClass('kpi-participation')
+                .html('<span class="kpi-value">' + tasaParticipacion.toFixed(2) + '%</span><span class="kpi-label">Participación</span>');
+            $('#abstention')
+                .removeClass('kpi-participation')
+                .addClass('kpi-abstention')
+                .html('<span class="kpi-value">' + tasaAbstencion.toFixed(2) + '%</span><span class="kpi-label">Abstención</span>');
             $('#quick_participantes').text(participantes);
             $('#quick_abstencionistas').text(abstencionistas);
 
