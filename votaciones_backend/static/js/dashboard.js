@@ -100,11 +100,11 @@
             $('#participation')
                 .removeClass('kpi-abstention')
                 .addClass('kpi-participation')
-                .html('<span class="kpi-value">' + tasaParticipacion.toFixed(2) + '%</span><span class="kpi-label">Participación</span>');
+                .html('<span class="kpi-value">' + tasaParticipacion.toFixed(2) + '%</span><span class="kpi-label">Participación</span><span class="kpi-track"><span class="kpi-bar" style="width:' + Math.max(0, Math.min(100, tasaParticipacion)).toFixed(2) + '%"></span></span>');
             $('#abstention')
                 .removeClass('kpi-participation')
                 .addClass('kpi-abstention')
-                .html('<span class="kpi-value">' + tasaAbstencion.toFixed(2) + '%</span><span class="kpi-label">Abstención</span>');
+                .html('<span class="kpi-value">' + tasaAbstencion.toFixed(2) + '%</span><span class="kpi-label">Abstención</span><span class="kpi-track"><span class="kpi-bar" style="width:' + Math.max(0, Math.min(100, tasaAbstencion)).toFixed(2) + '%"></span></span>');
             $('#quick_participantes').text(participantes);
             $('#quick_abstencionistas').text(abstencionistas);
 

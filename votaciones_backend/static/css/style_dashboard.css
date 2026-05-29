@@ -92,6 +92,7 @@
 .general-kpis {
     display: grid;
     gap: 8px;
+    grid-template-columns: 1fr 1fr;
 }
 
 .stat-pill {
@@ -102,23 +103,41 @@
     margin: 0;
     font-weight: 600;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 6px;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7);
+    min-height: 106px;
+    position: relative;
+    overflow: hidden;
 }
 
 .kpi-value {
-    font-size: 1.5rem;
+    font-size: 2.1rem;
     font-weight: 800;
     line-height: 1;
     letter-spacing: .2px;
 }
 
 .kpi-label {
-    font-size: .95rem;
+    font-size: 1rem;
     font-weight: 700;
-    opacity: .9;
+    opacity: .92;
+}
+
+.kpi-track {
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.55);
+    border: 1px solid rgba(0,0,0,.06);
+}
+
+.kpi-bar {
+    height: 100%;
+    border-radius: 999px;
+    width: 0;
 }
 
 .kpi-participation {
@@ -133,12 +152,27 @@
     color: #9f1239;
 }
 
+.kpi-participation .kpi-bar {
+    background: linear-gradient(90deg, #198754, #0f9d64);
+}
+
+.kpi-abstention .kpi-bar {
+    background: linear-gradient(90deg, #dc3545, #b42348);
+}
+
+.general-stats {
+    min-height: 0;
+}
+
 @media (max-width: 576px) {
+    .general-kpis {
+        grid-template-columns: 1fr;
+    }
     .kpi-value {
-        font-size: 1.25rem;
+        font-size: 1.65rem;
     }
     .kpi-label {
-        font-size: .88rem;
+        font-size: .9rem;
     }
 }
 

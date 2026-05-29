@@ -2,6 +2,12 @@
 
 Todos los cambios relevantes del sistema de votaciones se documentan aqui.
 
+## [1.0.27] - 2026-05-29
+### Changed
+- Rediseño fuerte de `Estadísticas Generales` en dashboard con formato KPI (valor grande + etiqueta + barra de progreso).
+- Eliminación del espacio vacío excesivo en la tarjeta de estadísticas generales.
+- Mejor distribución desktop/móvil de los KPIs para lectura más clara.
+
 ## [1.0.26] - 2026-05-29
 ### Changed
 - Rediseño visual de `Estadísticas Generales` en dashboard: KPIs con número destacado y etiqueta separada.
